@@ -1,8 +1,8 @@
 ext {
     cfgs = [
             compileSdkVersion             : 29,
-            buildToolsVersion             : "28.0.3",
-            minSdkVersion                 : 19,
+            buildToolsVersion             : "29.0.2",
+            minSdkVersion                 : 16,
             targetSdkVersion              : 29,
             versionCode                   : 17,
             versionName                   : "2.4.7",
