@@ -517,7 +517,7 @@ public class PhotoFragment extends Fragment implements View.OnClickListener,
                         .setPictureWindowAnimationStyle(mWindowAnimationStyle)// 自定义相册启动退出动画
                         .maxSelectNum(maxSelectNum)// 最大图片选择数量
                         .minSelectNum(1)// 最小选择数量
-                        //.isUseCustomCamera(cb_custom_camera.isChecked())// 是否使用自定义相机
+                        //.isUseCustomCamera(cb_custom_camera.isChecked())// 是否使用自定义相机  被废弃
                         //.querySpecifiedFormatSuffix(PictureMimeType.ofPNG())// 查询指定后缀格式资源
                         .selectionMode(cb_choose_mode.isChecked() ?
                                 PictureConfig.MULTIPLE : PictureConfig.SINGLE)// 多选 or 单选
