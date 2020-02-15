@@ -8,7 +8,6 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.StyleRes;
 
 import com.luck.picture.lib.R;
-import com.luck.picture.lib.camera.CustomCameraView;
 import com.luck.picture.lib.engine.ImageEngine;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
@@ -68,7 +67,6 @@ public final class PictureSelectionConfig implements Parcelable {
     public boolean isMultipleRecyclerAnimation;
     public boolean isMultipleSkipCrop;
     public boolean isWeChatStyle;
-    public boolean isUseCustomCamera;
     public boolean zoomAnim;
     public boolean isCompress;
     public boolean isOriginalControl;
@@ -170,7 +168,6 @@ public final class PictureSelectionConfig implements Parcelable {
         cropWidth = 0;
         cropHeight = 0;
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
-        buttonFeatures = CustomCameraView.BUTTON_STATE_BOTH;  //初始化按钮为可录制可拍照
         isCameraAroundState = false;
         isWithVideoImage = false;
         isAndroidQTransform = true;
@@ -190,7 +187,6 @@ public final class PictureSelectionConfig implements Parcelable {
         isFallbackVersion3 = true;
         enableCrop = false;
         isWeChatStyle = false;
-        isUseCustomCamera = false;
         isMultipleSkipCrop = true;
         isMultipleRecyclerAnimation = true;
         freeStyleCropEnabled = false;
@@ -305,7 +301,7 @@ public final class PictureSelectionConfig implements Parcelable {
         dest.writeByte(this.isMultipleRecyclerAnimation ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isMultipleSkipCrop ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isWeChatStyle ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.isUseCustomCamera ? (byte) 1 : (byte) 0);
+        dest.writeByte((byte) 0);
         dest.writeByte(this.zoomAnim ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isCompress ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isOriginalControl ? (byte) 1 : (byte) 0);
@@ -399,7 +395,7 @@ public final class PictureSelectionConfig implements Parcelable {
         this.isMultipleRecyclerAnimation = in.readByte() != 0;
         this.isMultipleSkipCrop = in.readByte() != 0;
         this.isWeChatStyle = in.readByte() != 0;
-        this.isUseCustomCamera = in.readByte() != 0;
+        boolean b = in.readByte() != 0;//废弃自定义相机
         this.zoomAnim = in.readByte() != 0;
         this.isCompress = in.readByte() != 0;
         this.isOriginalControl = in.readByte() != 0;

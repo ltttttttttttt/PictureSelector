@@ -50,7 +50,12 @@ public class PicturePlayAudioActivity extends PictureBaseActivity implements Vie
         tv_PlayPause = findViewById(R.id.tv_PlayPause);
         tv_Stop = findViewById(R.id.tv_Stop);
         tv_Quit = findViewById(R.id.tv_Quit);
-        handler.postDelayed(() -> initPlayer(audio_path), 30);
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                initPlayer(audio_path);
+            }
+        }, 30);
         tv_PlayPause.setOnClickListener(this);
         tv_Stop.setOnClickListener(this);
         tv_Quit.setOnClickListener(this);

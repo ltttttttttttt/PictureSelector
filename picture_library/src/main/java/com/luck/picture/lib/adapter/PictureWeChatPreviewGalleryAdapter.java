@@ -31,7 +31,7 @@ public class PictureWeChatPreviewGalleryAdapter
     }
 
     public void setNewData(List<LocalMedia> data) {
-        this.list = data == null ? new ArrayList<>() : data;
+        this.list = data == null ? new ArrayList<LocalMedia>() : data;
         notifyDataSetChanged();
     }
 
@@ -59,7 +59,7 @@ public class PictureWeChatPreviewGalleryAdapter
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         LocalMedia item = getItem(position);
         if (item != null) {
             holder.viewBorder.setVisibility(item.isChecked() ? View.VISIBLE : View.GONE);
@@ -67,9 +67,12 @@ public class PictureWeChatPreviewGalleryAdapter
                 config.imageEngine.loadImage(holder.itemView.getContext(), item.getPath(), holder.ivImage);
             }
 
-            holder.itemView.setOnClickListener(v -> {
-                if (listener != null && holder.getAdapterPosition() >= 0) {
-                    listener.onItemClick(holder.getAdapterPosition(), getItem(position), v);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null && holder.getAdapterPosition() >= 0) {
+                        listener.onItemClick(holder.getAdapterPosition(), getItem(position), v);
+                    }
                 }
             });
         }

@@ -58,7 +58,6 @@ public class PictureSelectionModel {
     }
 
     /**
-     * @param locale Language
      * @return PictureSelectionModel
      */
     public PictureSelectionModel setLanguage(int language) {
@@ -74,7 +73,6 @@ public class PictureSelectionModel {
      * time the activity is visible.
      *
      * @param requestedOrientation An orientation constant as used in
-     *                             {@link ActivityInfo#screenOrientation ActivityInfo.screenOrientation}.
      */
     public PictureSelectionModel setRequestedOrientation(int requestedOrientation) {
         selectionConfig.requestedOrientation = requestedOrientation;
@@ -107,15 +105,6 @@ public class PictureSelectionModel {
      */
     public PictureSelectionModel isWeChatStyle(boolean isWeChatStyle) {
         selectionConfig.isWeChatStyle = isWeChatStyle;
-        return this;
-    }
-
-    /**
-     * @param isUseCustomCamera Whether to use a custom camera
-     * @return
-     */
-    public PictureSelectionModel isUseCustomCamera(boolean isUseCustomCamera) {
-        selectionConfig.isUseCustomCamera = isUseCustomCamera;
         return this;
     }
 
@@ -326,7 +315,6 @@ public class PictureSelectionModel {
 
 
     /**
-     * @param Select whether to return directly
      * @return
      */
     public PictureSelectionModel isSingleDirectReturn(boolean isSingleDirectReturn) {
@@ -363,7 +351,6 @@ public class PictureSelectionModel {
      * @param cropHeight crop height
      * @return this
      * @deprecated Crop image output width and height
-     * {@link cropImageWideHigh()}
      */
     @Deprecated
     public PictureSelectionModel cropWH(int cropWidth, int cropHeight) {
@@ -426,7 +413,6 @@ public class PictureSelectionModel {
 
     /**
      * @param sizeMultiplier The multiplier to apply to the
-     *                       {@link com.bumptech.glide.request.target.Target}'s dimensions when
      *                       loading the resource.
      * @return 2.2.9开始Glide改为外部用户自己定义此方法没有意义了
      */
@@ -446,7 +432,6 @@ public class PictureSelectionModel {
     }
 
     /**
-     * @param Less than how many KB images are not compressed
      * @return
      */
     public PictureSelectionModel minimumCompressSize(int size) {
@@ -664,7 +649,6 @@ public class PictureSelectionModel {
     }
 
     /**
-     * @param Specify get image format
      * @return
      */
     public PictureSelectionModel querySpecifiedFormatSuffix(String specifiedFormat) {
@@ -872,7 +856,6 @@ public class PictureSelectionModel {
     /**
      * Dynamically set the album to start and exit the animation
      *
-     * @param style Activity Launch exit animation theme
      * @return
      */
     public PictureSelectionModel setPictureWindowAnimationStyle(PictureWindowAnimationStyle windowAnimationStyle) {
@@ -936,15 +919,10 @@ public class PictureSelectionModel {
             if (activity == null || selectionConfig == null) {
                 return;
             }
-            Intent intent;
-            if (selectionConfig.camera && selectionConfig.isUseCustomCamera) {
-                intent = new Intent(activity, PictureCustomCameraActivity.class);
-            } else {
-                intent = new Intent(activity, selectionConfig.camera
-                        ? PictureSelectorCameraEmptyActivity.class :
-                        selectionConfig.isWeChatStyle ? PictureSelectorWeChatStyleActivity.class
-                                : PictureSelectorActivity.class);
-            }
+            Intent intent = new Intent(activity, selectionConfig.camera
+                    ? PictureSelectorCameraEmptyActivity.class :
+                    selectionConfig.isWeChatStyle ? PictureSelectorWeChatStyleActivity.class
+                            : PictureSelectorActivity.class);
             Fragment fragment = selector.getFragment();
             if (fragment != null) {
                 fragment.startActivityForResult(intent, requestCode);
@@ -1004,14 +982,10 @@ public class PictureSelectionModel {
             selectionConfig.listener = new WeakReference<>(listener).get();
 
             Intent intent;
-            if (selectionConfig.camera && selectionConfig.isUseCustomCamera) {
-                intent = new Intent(activity, PictureCustomCameraActivity.class);
-            } else {
-                intent = new Intent(activity, selectionConfig.camera
-                        ? PictureSelectorCameraEmptyActivity.class :
-                        selectionConfig.isWeChatStyle ? PictureSelectorWeChatStyleActivity.class
-                                : PictureSelectorActivity.class);
-            }
+            intent = new Intent(activity, selectionConfig.camera
+                    ? PictureSelectorCameraEmptyActivity.class :
+                    selectionConfig.isWeChatStyle ? PictureSelectorWeChatStyleActivity.class
+                            : PictureSelectorActivity.class);
             Fragment fragment = selector.getFragment();
             if (fragment != null) {
                 fragment.startActivity(intent);
@@ -1041,14 +1015,10 @@ public class PictureSelectionModel {
             // 绑定回调监听
             selectionConfig.listener = new WeakReference<>(listener).get();
             Intent intent;
-            if (selectionConfig.camera && selectionConfig.isUseCustomCamera) {
-                intent = new Intent(activity, PictureCustomCameraActivity.class);
-            } else {
-                intent = new Intent(activity, selectionConfig.camera
-                        ? PictureSelectorCameraEmptyActivity.class :
-                        selectionConfig.isWeChatStyle ? PictureSelectorWeChatStyleActivity.class
-                                : PictureSelectorActivity.class);
-            }
+            intent = new Intent(activity, selectionConfig.camera
+                    ? PictureSelectorCameraEmptyActivity.class :
+                    selectionConfig.isWeChatStyle ? PictureSelectorWeChatStyleActivity.class
+                            : PictureSelectorActivity.class);
             Fragment fragment = selector.getFragment();
             if (fragment != null) {
                 fragment.startActivityForResult(intent, requestCode);

@@ -63,10 +63,13 @@ public class PictureSelectorPreviewWeChatStyleActivity extends PicturePreviewAct
         mRvGallery.addItemDecoration(new GridSpacingItemDecoration(Integer.MAX_VALUE,
                 ScreenUtils.dip2px(this, 8), false));
         mRvGallery.setAdapter(mGalleryAdapter);
-        mGalleryAdapter.setItemClickListener((position, media, v) -> {
-            if (viewPager != null && media != null) {
-                int newPosition = is_bottom_preview ? position : media.position - 1;
-                viewPager.setCurrentItem(newPosition);
+        mGalleryAdapter.setItemClickListener(new PictureWeChatPreviewGalleryAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position, LocalMedia media, View v) {
+                if (viewPager != null && media != null) {
+                    int newPosition = is_bottom_preview ? position : media.position - 1;
+                    viewPager.setCurrentItem(newPosition);
+                }
             }
         });
         if (is_bottom_preview) {

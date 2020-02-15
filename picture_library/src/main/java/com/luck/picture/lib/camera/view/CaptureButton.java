@@ -12,7 +12,6 @@ import android.os.CountDownTimer;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.luck.picture.lib.camera.CustomCameraView;
 import com.luck.picture.lib.camera.CheckPermission;
 import com.luck.picture.lib.camera.listener.CaptureListener;
 
@@ -93,7 +92,6 @@ public class CaptureButton extends View {
         longPressRunnable = new LongPressRunnable();
 
         state = STATE_IDLE;                //初始化为空闲状态
-        button_state = CustomCameraView.BUTTON_STATE_BOTH;  //初始化按钮为可录制可拍照
         duration = 10 * 1000;              //默认最长录制时间为10s
         min_duration = 1500;              //默认最短录制时间为1.5s
 
@@ -144,18 +142,8 @@ public class CaptureButton extends View {
                     break;
                 event_Y = event.getY();     //记录Y值
                 state = STATE_PRESS;        //修改当前状态为点击按下
-
-                //判断按钮状态是否为可录制状态
-                if ((button_state == CustomCameraView.BUTTON_STATE_ONLY_RECORDER || button_state == CustomCameraView.BUTTON_STATE_BOTH))
-                    postDelayed(longPressRunnable, 500);    //同时延长500启动长按后处理的逻辑Runnable
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (captureLisenter != null
-                        && state == STATE_RECORDERING
-                        && (button_state == CustomCameraView.BUTTON_STATE_ONLY_RECORDER || button_state == CustomCameraView.BUTTON_STATE_BOTH)) {
-                    //记录当前Y值与按下时候Y值的差值，调用缩放回调接口
-                    captureLisenter.recordZoom(event_Y - event.getY());
-                }
                 break;
             case MotionEvent.ACTION_UP:
                 //根据当前按钮的状态进行相应的处理  ----CodeReview---抬起瞬间应该重置状态 当前状态可能为按下和正在录制
@@ -173,16 +161,11 @@ public class CaptureButton extends View {
         switch (state) {
             //当前是点击按下
             case STATE_PRESS:
-                if (captureLisenter != null && (button_state == CustomCameraView.BUTTON_STATE_ONLY_CAPTURE || button_state ==
-                        CustomCameraView.BUTTON_STATE_BOTH)) {
-                    startCaptureAnimation(button_inside_radius);
-                } else {
-                    state = STATE_IDLE;
-                }
+                state = STATE_IDLE;
                 break;
             // ---CodeReview---当内外圆动画未结束时已经是长按状态 但还没有置为STATE_RECORDERING时 应该也要结束录制  此处是一个bug
             case STATE_LONG_PRESS:
-            //当前是长按状态
+                //当前是长按状态
             case STATE_RECORDERING:
                 timer.cancel(); //停止计时器
                 recordEnd();    //录制结束
@@ -219,9 +202,12 @@ public class CaptureButton extends View {
     //内圆动画
     private void startCaptureAnimation(float inside_start) {
         ValueAnimator inside_anim = ValueAnimator.ofFloat(inside_start, inside_start * 0.75f, inside_start);
-        inside_anim.addUpdateListener(animation -> {
-            button_inside_radius = (float) animation.getAnimatedValue();
-            invalidate();
+        inside_anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                button_inside_radius = (float) animation.getAnimatedValue();
+                invalidate();
+            }
         });
         inside_anim.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -255,14 +241,20 @@ public class CaptureButton extends View {
         ValueAnimator outside_anim = ValueAnimator.ofFloat(outside_start, outside_end);
         ValueAnimator inside_anim = ValueAnimator.ofFloat(inside_start, inside_end);
         //外圆动画监听
-        outside_anim.addUpdateListener(animation -> {
-            button_outside_radius = (float) animation.getAnimatedValue();
-            invalidate();
+        outside_anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                button_outside_radius = (float) animation.getAnimatedValue();
+                invalidate();
+            }
         });
         //内圆动画监听
-        inside_anim.addUpdateListener(animation -> {
-            button_inside_radius = (float) animation.getAnimatedValue();
-            invalidate();
+        inside_anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                button_inside_radius = (float) animation.getAnimatedValue();
+                invalidate();
+            }
         });
         AnimatorSet set = new AnimatorSet();
         //当动画结束后启动录像Runnable并且回调录像开始接口
@@ -335,7 +327,6 @@ public class CaptureButton extends View {
             );
         }
     }
-
 
 
     //设置最长录制时间

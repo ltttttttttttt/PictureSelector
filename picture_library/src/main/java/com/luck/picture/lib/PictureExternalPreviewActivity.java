@@ -39,6 +39,7 @@ import com.luck.picture.lib.dialog.PictureCustomDialog;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.ImageCompleteCallback;
 import com.luck.picture.lib.permissions.PermissionChecker;
+import com.luck.picture.lib.photoview.OnViewTapListener;
 import com.luck.picture.lib.photoview.PhotoView;
 import com.luck.picture.lib.tools.AttrsUtils;
 import com.luck.picture.lib.tools.BitmapUtils;
@@ -247,7 +248,7 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
         }
 
         @Override
-        public Object instantiateItem(ViewGroup container, int position) {
+        public Object instantiateItem(final ViewGroup container, int position) {
             View contentView = mCacheView.get(position);
             if (contentView == null) {
                 contentView = LayoutInflater.from(container.getContext())
@@ -258,7 +259,7 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
                 final SubsamplingScaleImageView longImageView = contentView.findViewById(R.id.longImg);
                 // 视频播放按钮
                 ImageView ivPlay = contentView.findViewById(R.id.iv_play);
-                LocalMedia media = images.get(position);
+                final LocalMedia media = images.get(position);
                 if (media != null) {
                     final String path;
                     if (media.isCut() && !media.isCompressed()) {
@@ -310,55 +311,70 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
                             }
                         }
                     }
-                    imageView.setOnViewTapListener((view, x, y) -> {
-                        finish();
-                        exitAnimation();
+                    imageView.setOnViewTapListener(new OnViewTapListener() {
+                        @Override
+                        public void onViewTap(View view, float x, float y) {
+                            finish();
+                            exitAnimation();
+                        }
                     });
-                    longImageView.setOnClickListener(v -> {
-                        finish();
-                        exitAnimation();
+                    longImageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            exitAnimation();
+                        }
                     });
                     if (!eqVideo) {
-                        longImageView.setOnLongClickListener(v -> {
-                            if (config.isNotPreviewDownload) {
-                                if (PermissionChecker.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                                    downloadPath = path;
-                                    String currentMimeType = PictureMimeType.isHttp(path) ? PictureMimeType.getImageMimeType(media.getPath()) : media.getMimeType();
-                                    mMimeType = PictureMimeType.isJPG(currentMimeType) ? PictureMimeType.MIME_TYPE_JPEG : currentMimeType;
-                                    showDownLoadDialog();
-                                } else {
-                                    PermissionChecker.requestPermissions(PictureExternalPreviewActivity.this,
-                                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PictureConfig.APPLY_STORAGE_PERMISSIONS_CODE);
+                        longImageView.setOnLongClickListener(new View.OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(View v) {
+                                if (config.isNotPreviewDownload) {
+                                    if (PermissionChecker.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                                        downloadPath = path;
+                                        String currentMimeType = PictureMimeType.isHttp(path) ? PictureMimeType.getImageMimeType(media.getPath()) : media.getMimeType();
+                                        mMimeType = PictureMimeType.isJPG(currentMimeType) ? PictureMimeType.MIME_TYPE_JPEG : currentMimeType;
+                                        showDownLoadDialog();
+                                    } else {
+                                        PermissionChecker.requestPermissions(PictureExternalPreviewActivity.this,
+                                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PictureConfig.APPLY_STORAGE_PERMISSIONS_CODE);
+                                    }
                                 }
+                                return true;
                             }
-                            return true;
                         });
                     }
                     if (!eqVideo) {
-                        imageView.setOnLongClickListener(v -> {
-                            if (config.isNotPreviewDownload) {
-                                if (PermissionChecker.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                                    downloadPath = path;
-                                    String currentMimeType = PictureMimeType.isHttp(path) ? PictureMimeType.getImageMimeType(media.getPath()) : media.getMimeType();
-                                    mMimeType = PictureMimeType.isJPG(currentMimeType) ? PictureMimeType.MIME_TYPE_JPEG : currentMimeType;
-                                    showDownLoadDialog();
-                                } else {
-                                    PermissionChecker.requestPermissions(PictureExternalPreviewActivity.this,
-                                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PictureConfig.APPLY_STORAGE_PERMISSIONS_CODE);
+                        imageView.setOnLongClickListener(new View.OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(View v) {
+                                if (config.isNotPreviewDownload) {
+                                    if (PermissionChecker.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                                        downloadPath = path;
+                                        String currentMimeType = PictureMimeType.isHttp(path) ? PictureMimeType.getImageMimeType(media.getPath()) : media.getMimeType();
+                                        mMimeType = PictureMimeType.isJPG(currentMimeType) ? PictureMimeType.MIME_TYPE_JPEG : currentMimeType;
+                                        showDownLoadDialog();
+                                    } else {
+                                        PermissionChecker.requestPermissions(PictureExternalPreviewActivity.this,
+                                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PictureConfig.APPLY_STORAGE_PERMISSIONS_CODE);
+                                    }
                                 }
+                                return true;
                             }
-                            return true;
                         });
                     }
-                    ivPlay.setOnClickListener(v -> {
-                        if (config.customVideoPlayCallback != null) {
-                            config.customVideoPlayCallback.startPlayVideo(media);
-                        } else {
-                            Intent intent = new Intent();
-                            Bundle bundle = new Bundle();
-                            bundle.putString(PictureConfig.EXTRA_VIDEO_PATH, path);
-                            intent.putExtras(bundle);
-                            JumpUtils.startPictureVideoPlayActivity(container.getContext(), bundle, PictureConfig.PREVIEW_VIDEO_CODE);
+                    ivPlay.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (config.customVideoPlayCallback != null) {
+                                config.customVideoPlayCallback.startPlayVideo(media);
+                            } else {
+                                Intent intent = new Intent();
+                                Bundle bundle = new Bundle();
+                                bundle.putString(PictureConfig.EXTRA_VIDEO_PATH, path);
+                                intent.putExtras(bundle);
+                                JumpUtils.startPictureVideoPlayActivity(container.getContext(), bundle, PictureConfig.PREVIEW_VIDEO_CODE);
+                            }
                         }
                     });
                 }
@@ -398,34 +414,40 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
             TextView tv_content = dialog.findViewById(R.id.tv_content);
             tv_title.setText(getString(R.string.picture_prompt));
             tv_content.setText(getString(R.string.picture_prompt_content));
-            btn_cancel.setOnClickListener(v -> {
-                if (!isFinishing()) {
-                    dialog.dismiss();
-                }
-            });
-            btn_commit.setOnClickListener(view -> {
-                boolean isHttp = PictureMimeType.isHttp(downloadPath);
-                showPleaseDialog();
-                if (isHttp) {
-                    mLoadDataThread = new LoadDataThread(downloadPath);
-                    mLoadDataThread.start();
-                } else {
-                    // 有可能本地图片
-                    try {
-                        if (isAndroidQ) {
-                            savePictureAlbumAndroidQ(downloadPath.startsWith("content://") ? Uri.parse(downloadPath) : Uri.fromFile(new File(downloadPath)));
-                        } else {
-                            // 把文件插入到系统图库
-                            savePictureAlbum();
-                        }
-                    } catch (Exception e) {
-                        ToastUtils.s(getContext(), getString(R.string.picture_save_error) + "\n" + e.getMessage());
-                        dismissDialog();
-                        e.printStackTrace();
+            btn_cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!isFinishing()) {
+                        dialog.dismiss();
                     }
                 }
-                if (!isFinishing()) {
-                    dialog.dismiss();
+            });
+            btn_commit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean isHttp = PictureMimeType.isHttp(downloadPath);
+                    showPleaseDialog();
+                    if (isHttp) {
+                        mLoadDataThread = new LoadDataThread(downloadPath);
+                        mLoadDataThread.start();
+                    } else {
+                        // 有可能本地图片
+                        try {
+                            if (isAndroidQ) {
+                                savePictureAlbumAndroidQ(downloadPath.startsWith("content://") ? Uri.parse(downloadPath) : Uri.fromFile(new File(downloadPath)));
+                            } else {
+                                // 把文件插入到系统图库
+                                savePictureAlbum();
+                            }
+                        } catch (Exception e) {
+                            ToastUtils.s(getContext(), getString(R.string.picture_save_error) + "\n" + e.getMessage());
+                            dismissDialog();
+                            e.printStackTrace();
+                        }
+                    }
+                    if (!isFinishing()) {
+                        dialog.dismiss();
+                    }
                 }
             });
             dialog.show();
@@ -463,59 +485,62 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
      *
      * @param inputUri
      */
-    private void savePictureAlbumAndroidQ(Uri inputUri) {
+    private void savePictureAlbumAndroidQ(final Uri inputUri) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, DateUtils.getCreateFileName("IMG_"));
         contentValues.put(MediaStore.Images.Media.DATE_TAKEN, ValueOf.toString(System.currentTimeMillis()));
         contentValues.put(MediaStore.Images.Media.MIME_TYPE, mMimeType);
         contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, PictureMimeType.DCIM);
-        Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+        final Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
         if (uri == null) {
             mHandler.sendEmptyMessage(SAVE_IMAGE_ERROR);
             return;
         }
-        AsyncTask.SERIAL_EXECUTOR.execute(() -> {
-            OutputStream outputStream = null;
-            ParcelFileDescriptor parcelFileDescriptor = null;
-            try {
-                outputStream = getContentResolver().openOutputStream(uri);
-                parcelFileDescriptor = getContentResolver().openFileDescriptor(inputUri, "r");
-                BitmapFactory.Options opts = new BitmapFactory.Options();
-                opts.inJustDecodeBounds = true;
-                opts.inSampleSize = 2;
-                opts.inJustDecodeBounds = false;
-                Bitmap bitmap = BitmapFactory.decodeFileDescriptor(parcelFileDescriptor.getFileDescriptor(), null, opts);
-                if (bitmap != null) {
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N && PictureMimeType.isJPEG(mMimeType)) {
-                        ExifInterface exifInterface = new ExifInterface(parcelFileDescriptor.getFileDescriptor());
-                        int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
-                        int rotationAngle = BitmapUtils.getRotationAngle(orientation);
-                        bitmap = BitmapUtils.rotatingImage(bitmap, rotationAngle);
-                    }
-                    if (bitmap != null) {
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-                        outputStream.close();
-                        String path = PictureFileUtils.getPath(getContext(), uri);
-                        Message message = mHandler.obtainMessage();
-                        message.what = SAVE_IMAGE_SUCCESSFUL;
-                        message.obj = path;
-                        mHandler.sendMessage(message);
-                        bitmap.recycle();
-                    }
-                } else {
-                    mHandler.sendEmptyMessage(SAVE_IMAGE_ERROR);
-                }
-            } catch (Exception e) {
-                mHandler.sendEmptyMessage(SAVE_IMAGE_ERROR);
-                e.printStackTrace();
-            } finally {
-                PictureFileUtils.close(parcelFileDescriptor);
+        AsyncTask.SERIAL_EXECUTOR.execute(new Runnable() {
+            @Override
+            public void run() {
+                OutputStream outputStream = null;
+                ParcelFileDescriptor parcelFileDescriptor = null;
                 try {
-                    if (outputStream != null) {
-                        outputStream.close();
+                    outputStream = getContentResolver().openOutputStream(uri);
+                    parcelFileDescriptor = getContentResolver().openFileDescriptor(inputUri, "r");
+                    BitmapFactory.Options opts = new BitmapFactory.Options();
+                    opts.inJustDecodeBounds = true;
+                    opts.inSampleSize = 2;
+                    opts.inJustDecodeBounds = false;
+                    Bitmap bitmap = BitmapFactory.decodeFileDescriptor(parcelFileDescriptor.getFileDescriptor(), null, opts);
+                    if (bitmap != null) {
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N && PictureMimeType.isJPEG(mMimeType)) {
+                            ExifInterface exifInterface = new ExifInterface(parcelFileDescriptor.getFileDescriptor());
+                            int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
+                            int rotationAngle = BitmapUtils.getRotationAngle(orientation);
+                            bitmap = BitmapUtils.rotatingImage(bitmap, rotationAngle);
+                        }
+                        if (bitmap != null) {
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                            outputStream.close();
+                            String path = PictureFileUtils.getPath(getContext(), uri);
+                            Message message = mHandler.obtainMessage();
+                            message.what = SAVE_IMAGE_SUCCESSFUL;
+                            message.obj = path;
+                            mHandler.sendMessage(message);
+                            bitmap.recycle();
+                        }
+                    } else {
+                        mHandler.sendEmptyMessage(SAVE_IMAGE_ERROR);
                     }
-                } catch (IOException e) {
+                } catch (Exception e) {
+                    mHandler.sendEmptyMessage(SAVE_IMAGE_ERROR);
                     e.printStackTrace();
+                } finally {
+                    PictureFileUtils.close(parcelFileDescriptor);
+                    try {
+                        if (outputStream != null) {
+                            outputStream.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -639,7 +664,10 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
                             if (!SdkVersionUtils.checkedAndroid_Q()) {
                                 File file = new File(path);
                                 MediaStore.Images.Media.insertImage(getContentResolver(), file.getAbsolutePath(), file.getName(), null);
-                                new PictureMediaScannerConnection(getContext(), file.getAbsolutePath(), () -> {
+                                new PictureMediaScannerConnection(getContext(), file.getAbsolutePath(), new PictureMediaScannerConnection.ScanListener() {
+                                    @Override
+                                    public void onScanFinish() {
+                                    }
                                 });
                             }
                             ToastUtils.s(getContext(), getString(R.string.picture_save_success) + "\n" + path);

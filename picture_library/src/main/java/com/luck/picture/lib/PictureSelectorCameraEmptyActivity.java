@@ -45,21 +45,19 @@ public class PictureSelectorCameraEmptyActivity extends PictureBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (!config.isUseCustomCamera) {
-            if (savedInstanceState == null) {
-                if (PermissionChecker
-                        .checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) &&
-                        PermissionChecker
-                                .checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    onTakePhoto();
-                } else {
-                    PermissionChecker.requestPermissions(this, new String[]{
-                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE}, PictureConfig.APPLY_STORAGE_PERMISSIONS_CODE);
-                }
+        if (savedInstanceState == null) {
+            if (PermissionChecker
+                    .checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) &&
+                    PermissionChecker
+                            .checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                onTakePhoto();
+            } else {
+                PermissionChecker.requestPermissions(this, new String[]{
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE}, PictureConfig.APPLY_STORAGE_PERMISSIONS_CODE);
             }
-            setTheme(R.style.Picture_Theme_Translucent);
         }
+        setTheme(R.style.Picture_Theme_Translucent);
         super.onCreate(savedInstanceState);
     }
 
@@ -192,8 +190,11 @@ public class PictureSelectorCameraEmptyActivity extends PictureBaseActivity {
         if (!isAndroidQ) {
             if (config.isFallbackVersion3) {
                 new PictureMediaScannerConnection(getContext(), config.cameraPath,
-                        () -> {
+                        new PictureMediaScannerConnection.ScanListener() {
+                            @Override
+                            public void onScanFinish() {
 
+                            }
                         });
             } else {
                 sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(config.cameraPath))));
@@ -216,11 +217,6 @@ public class PictureSelectorCameraEmptyActivity extends PictureBaseActivity {
                 int lastIndexOf = config.cameraPath.lastIndexOf("/") + 1;
                 media.setId(lastIndexOf > 0 ? ValueOf.toLong(config.cameraPath.substring(lastIndexOf)) : -1);
                 media.setRealPath(path);
-                if (config.isUseCustomCamera && data != null) {
-                    // 自定义拍照时已经在应用沙盒内生成了文件
-                    String mediaPath = data.getStringExtra(PictureConfig.EXTRA_MEDIA_PATH);
-                    media.setAndroidQToPath(mediaPath);
-                }
             } else {
                 final File file = new File(config.cameraPath);
                 mimeType = PictureMimeType.getMimeType(file);

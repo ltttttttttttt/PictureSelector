@@ -190,9 +190,12 @@ public class CaptureLayout extends FrameLayout {
         btn_cancel_param.gravity = Gravity.CENTER_VERTICAL;
         btn_cancel_param.setMargins((layout_width / 4) - button_size / 2, 0, 0, 0);
         btn_cancel.setLayoutParams(btn_cancel_param);
-        btn_cancel.setOnClickListener(view -> {
-            if (typeListener != null) {
-                typeListener.cancel();
+        btn_cancel.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (typeListener != null) {
+                    typeListener.cancel();
+                }
             }
         });
 
@@ -202,9 +205,12 @@ public class CaptureLayout extends FrameLayout {
         btn_confirm_param.gravity = Gravity.CENTER_VERTICAL | Gravity.RIGHT;
         btn_confirm_param.setMargins(0, 0, (layout_width / 4) - button_size / 2, 0);
         btn_confirm.setLayoutParams(btn_confirm_param);
-        btn_confirm.setOnClickListener(view -> {
-            if (typeListener != null) {
-                typeListener.confirm();
+        btn_confirm.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (typeListener != null) {
+                    typeListener.confirm();
+                }
             }
         });
 
@@ -214,9 +220,12 @@ public class CaptureLayout extends FrameLayout {
         btn_return_param.gravity = Gravity.CENTER_VERTICAL;
         btn_return_param.setMargins(layout_width / 6, 0, 0, 0);
         btn_return.setLayoutParams(btn_return_param);
-        btn_return.setOnClickListener(v -> {
-            if (leftClickListener != null) {
-                leftClickListener.onClick();
+        btn_return.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (leftClickListener != null) {
+                    leftClickListener.onClick();
+                }
             }
         });
         //左边自定义按钮
@@ -225,9 +234,12 @@ public class CaptureLayout extends FrameLayout {
         iv_custom_param_left.gravity = Gravity.CENTER_VERTICAL;
         iv_custom_param_left.setMargins(layout_width / 6, 0, 0, 0);
         iv_custom_left.setLayoutParams(iv_custom_param_left);
-        iv_custom_left.setOnClickListener(v -> {
-            if (leftClickListener != null) {
-                leftClickListener.onClick();
+        iv_custom_left.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (leftClickListener != null) {
+                    leftClickListener.onClick();
+                }
             }
         });
 
@@ -237,9 +249,12 @@ public class CaptureLayout extends FrameLayout {
         iv_custom_param_right.gravity = Gravity.CENTER_VERTICAL | Gravity.RIGHT;
         iv_custom_param_right.setMargins(0, 0, layout_width / 6, 0);
         iv_custom_right.setLayoutParams(iv_custom_param_right);
-        iv_custom_right.setOnClickListener(v -> {
-            if (rightClickListener != null) {
-                rightClickListener.onClick();
+        iv_custom_right.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (rightClickListener != null) {
+                    rightClickListener.onClick();
+                }
             }
         });
 

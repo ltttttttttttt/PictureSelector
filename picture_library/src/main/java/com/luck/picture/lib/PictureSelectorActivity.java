@@ -1,6 +1,7 @@
 package com.luck.picture.lib;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -180,8 +182,11 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
         if (config.isOriginalControl) {
             mCbOriginal.setVisibility(View.VISIBLE);
             mCbOriginal.setChecked(config.isCheckOriginalImage);
-            mCbOriginal.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                config.isCheckOriginalImage = isChecked;
+            mCbOriginal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    config.isCheckOriginalImage = isChecked;
+                }
             });
         }
     }
@@ -427,8 +432,12 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
                     boolean isEmpty = images.size() > 0;
                     if (!isEmpty) {
                         mTvEmpty.setText(getString(R.string.picture_empty));
-                        mTvEmpty.setCompoundDrawablesRelativeWithIntrinsicBounds
-                                (0, R.drawable.picture_icon_no_data, 0, 0);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                            mTvEmpty.setCompoundDrawablesRelativeWithIntrinsicBounds
+                                    (0, R.drawable.picture_icon_no_data, 0, 0);
+                        } else {
+                            mTvEmpty.setCompoundDrawables(null, getResources().getDrawable(R.drawable.picture_icon_no_data), null, null);
+                        }
                     }
                     mTvEmpty.setVisibility(isEmpty ? View.INVISIBLE : View.VISIBLE);
                 }
@@ -453,10 +462,6 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
     public void startCamera() {
         // 防止快速点击，但是单独拍照不管
         if (!DoubleUtils.isFastDoubleClick()) {
-            if (config.isUseCustomCamera) {
-                startCustomCamera();
-                return;
-            }
             switch (config.chooseMode) {
                 case PictureConfig.TYPE_ALL:
                     // 如果是全部类型下，单独拍照就默认图片 (因为单独拍照不会new此PopupWindow对象)
@@ -486,19 +491,9 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
      * 启动自定义相机
      */
     private void startCustomCamera() {
-        if (PermissionChecker.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)) {
-            Intent intent = new Intent(this, PictureCustomCameraActivity.class);
-            startActivityForResult(intent, PictureConfig.REQUEST_CAMERA);
-            PictureWindowAnimationStyle windowAnimationStyle = config.windowAnimationStyle;
-            overridePendingTransition(windowAnimationStyle != null &&
-                    windowAnimationStyle.activityEnterAnimation != 0 ?
-                    windowAnimationStyle.activityEnterAnimation :
-                    R.anim.picture_anim_enter, R.anim.picture_anim_fade_in);
-        } else {
-            PermissionChecker
-                    .requestPermissions(this,
-                            new String[]{Manifest.permission.RECORD_AUDIO}, PictureConfig.APPLY_RECORD_AUDIO_PERMISSIONS_CODE);
-        }
+        PermissionChecker
+                .requestPermissions(this,
+                        new String[]{Manifest.permission.RECORD_AUDIO}, PictureConfig.APPLY_RECORD_AUDIO_PERMISSIONS_CODE);
     }
 
 
@@ -774,7 +769,12 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
             mTvStop = audioDialog.findViewById(R.id.tv_Stop);
             mTvQuit = audioDialog.findViewById(R.id.tv_Quit);
             if (mHandler != null) {
-                mHandler.postDelayed(() -> initPlayer(path), 30);
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        initPlayer(path);
+                    }
+                }, 30);
             }
             mTvPlayPause.setOnClickListener(new audioOnClick(path));
             mTvStop.setOnClickListener(new audioOnClick(path));
@@ -795,18 +795,26 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
                 public void onStopTrackingTouch(SeekBar seekBar) {
                 }
             });
-            audioDialog.setOnDismissListener(dialog -> {
-                if (mHandler != null) {
-                    mHandler.removeCallbacks(mRunnable);
-                }
-                new Handler().postDelayed(() -> stop(path), 30);
-                try {
-                    if (audioDialog != null
-                            && audioDialog.isShowing()) {
-                        audioDialog.dismiss();
+            audioDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    if (mHandler != null) {
+                        mHandler.removeCallbacks(mRunnable);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            stop(path);
+                        }
+                    }, 30);
+                    try {
+                        if (audioDialog != null
+                                && audioDialog.isShowing()) {
+                            audioDialog.dismiss();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
             if (mHandler != null) {
@@ -877,7 +885,12 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
             }
             if (id == R.id.tv_Quit) {
                 if (mHandler != null) {
-                    mHandler.postDelayed(() -> stop(path), 30);
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            stop(path);
+                        }
+                    }, 30);
                     try {
                         if (audioDialog != null
                                 && audioDialog.isShowing()) {
@@ -1278,7 +1291,11 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
         if (!isAndroidQ) {
             if (config.isFallbackVersion3) {
                 new PictureMediaScannerConnection(getContext(), config.cameraPath,
-                        () -> {
+                        new PictureMediaScannerConnection.ScanListener() {
+                            @Override
+                            public void onScanFinish() {
+
+                            }
                         });
             } else {
                 sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(config.cameraPath))));

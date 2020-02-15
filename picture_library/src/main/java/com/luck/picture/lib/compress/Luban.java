@@ -149,38 +149,41 @@ public class Luban implements Handler.Callback {
         index = -1;
         while (iterator.hasNext()) {
             final InputStreamProvider path = iterator.next();
-            AsyncTask.SERIAL_EXECUTOR.execute(() -> {
-                try {
-                    index++;
-                    mHandler.sendMessage(mHandler.obtainMessage(MSG_COMPRESS_START));
-                    File result;
-                    if (path.getMedia().isCompressed()
-                            && !TextUtils.isEmpty(path.getMedia().getCompressPath())) {
-                        // 已经压缩过的图片不重复压缩了
-                        boolean exists = new File(path.getMedia().getCompressPath()).exists();
-                        result = exists ? new File(path.getMedia().getCompressPath())
-                                : compress(context, path);
-                    } else {
-                        result = PictureMimeType.eqVideo(path.getMedia().getMimeType())
-                                ? new File(path.getPath()) : compress(context, path);
-                    }
-                    if (mediaList != null && mediaList.size() > 0) {
-                        LocalMedia media = mediaList.get(index);
-                        String newPath = result.getAbsolutePath();
-                        boolean eqHttp = PictureMimeType.isHttp(newPath);
-                        boolean eqVideo = PictureMimeType.eqVideo(media.getMimeType());
-                        media.setCompressed(eqHttp || eqVideo ? false : true);
-                        media.setCompressPath(eqHttp || eqVideo ? "" : result.getAbsolutePath());
-                        media.setAndroidQToPath(isAndroidQ ? media.getCompressPath() : null);
-                        boolean isLast = index == mediaList.size() - 1;
-                        if (isLast) {
-                            mHandler.sendMessage(mHandler.obtainMessage(MSG_COMPRESS_SUCCESS, mediaList));
+            AsyncTask.SERIAL_EXECUTOR.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        index++;
+                        mHandler.sendMessage(mHandler.obtainMessage(MSG_COMPRESS_START));
+                        File result;
+                        if (path.getMedia().isCompressed()
+                                && !TextUtils.isEmpty(path.getMedia().getCompressPath())) {
+                            // 已经压缩过的图片不重复压缩了
+                            boolean exists = new File(path.getMedia().getCompressPath()).exists();
+                            result = exists ? new File(path.getMedia().getCompressPath())
+                                    : compress(context, path);
+                        } else {
+                            result = PictureMimeType.eqVideo(path.getMedia().getMimeType())
+                                    ? new File(path.getPath()) : compress(context, path);
                         }
-                    } else {
-                        mHandler.sendMessage(mHandler.obtainMessage(MSG_COMPRESS_ERROR, new IOException()));
+                        if (mediaList != null && mediaList.size() > 0) {
+                            LocalMedia media = mediaList.get(index);
+                            String newPath = result.getAbsolutePath();
+                            boolean eqHttp = PictureMimeType.isHttp(newPath);
+                            boolean eqVideo = PictureMimeType.eqVideo(media.getMimeType());
+                            media.setCompressed(eqHttp || eqVideo ? false : true);
+                            media.setCompressPath(eqHttp || eqVideo ? "" : result.getAbsolutePath());
+                            media.setAndroidQToPath(isAndroidQ ? media.getCompressPath() : null);
+                            boolean isLast = index == mediaList.size() - 1;
+                            if (isLast) {
+                                mHandler.sendMessage(mHandler.obtainMessage(MSG_COMPRESS_SUCCESS, mediaList));
+                            }
+                        } else {
+                            mHandler.sendMessage(mHandler.obtainMessage(MSG_COMPRESS_ERROR, new IOException()));
+                        }
+                    } catch (IOException e) {
+                        mHandler.sendMessage(mHandler.obtainMessage(MSG_COMPRESS_ERROR, e));
                     }
-                } catch (IOException e) {
-                    mHandler.sendMessage(mHandler.obtainMessage(MSG_COMPRESS_ERROR, e));
                 }
             });
 
@@ -399,7 +402,6 @@ public class Luban implements Handler.Callback {
          * 扩展符合PictureSelector的压缩策略
          *
          * @param media LocalMedia对象
-         * @param <T>
          * @return
          */
         private Builder load(final LocalMedia media) {

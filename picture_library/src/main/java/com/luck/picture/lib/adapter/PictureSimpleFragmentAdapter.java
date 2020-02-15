@@ -17,6 +17,7 @@ import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.config.PictureSelectionConfig;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.photoview.OnViewTapListener;
 import com.luck.picture.lib.photoview.PhotoView;
 import com.luck.picture.lib.tools.JumpUtils;
 import com.luck.picture.lib.tools.MediaUtils;
@@ -89,7 +90,7 @@ public class PictureSimpleFragmentAdapter extends PagerAdapter {
     }
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
+    public Object instantiateItem(final ViewGroup container, int position) {
         View contentView = mCacheView.get(position);
         if (contentView == null) {
             contentView = LayoutInflater.from(container.getContext())
@@ -100,7 +101,7 @@ public class PictureSimpleFragmentAdapter extends PagerAdapter {
             final SubsamplingScaleImageView longImg = contentView.findViewById(R.id.longImg);
             // 视频播放按钮
             ImageView ivPlay = contentView.findViewById(R.id.iv_play);
-            LocalMedia media = images.get(position);
+            final LocalMedia media = images.get(position);
             if (media != null) {
                 final String mimeType = media.getMimeType();
                 boolean eqVideo = PictureMimeType.eqVideo(mimeType);
@@ -136,26 +137,35 @@ public class PictureSimpleFragmentAdapter extends PagerAdapter {
                         }
                     }
                 }
-                imageView.setOnViewTapListener((view, x, y) -> {
-                    if (onBackPressed != null) {
-                        onBackPressed.onActivityBackPressed();
+                imageView.setOnViewTapListener(new OnViewTapListener() {
+                    @Override
+                    public void onViewTap(View view, float x, float y) {
+                        if (onBackPressed != null) {
+                            onBackPressed.onActivityBackPressed();
+                        }
                     }
                 });
-                longImg.setOnClickListener(v -> {
-                    if (onBackPressed != null) {
-                        onBackPressed.onActivityBackPressed();
+                longImg.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (onBackPressed != null) {
+                            onBackPressed.onActivityBackPressed();
+                        }
                     }
                 });
-                ivPlay.setOnClickListener(v -> {
-                    if (config.customVideoPlayCallback != null) {
-                        config.customVideoPlayCallback.startPlayVideo(media);
-                    } else {
-                        Intent intent = new Intent();
-                        Bundle bundle = new Bundle();
-                        bundle.putBoolean(PictureConfig.EXTRA_PREVIEW_VIDEO, true);
-                        bundle.putString(PictureConfig.EXTRA_VIDEO_PATH, path);
-                        intent.putExtras(bundle);
-                        JumpUtils.startPictureVideoPlayActivity(container.getContext(), bundle, PictureConfig.PREVIEW_VIDEO_CODE);
+                ivPlay.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (config.customVideoPlayCallback != null) {
+                            config.customVideoPlayCallback.startPlayVideo(media);
+                        } else {
+                            Intent intent = new Intent();
+                            Bundle bundle = new Bundle();
+                            bundle.putBoolean(PictureConfig.EXTRA_PREVIEW_VIDEO, true);
+                            bundle.putString(PictureConfig.EXTRA_VIDEO_PATH, path);
+                            intent.putExtras(bundle);
+                            JumpUtils.startPictureVideoPlayActivity(container.getContext(), bundle, PictureConfig.PREVIEW_VIDEO_CODE);
+                        }
                     }
                 });
             }

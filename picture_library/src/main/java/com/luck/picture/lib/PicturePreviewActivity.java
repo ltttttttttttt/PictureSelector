@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -118,9 +119,9 @@ public class PicturePreviewActivity extends PictureBaseActivity implements
         is_bottom_preview = getIntent().
                 getBooleanExtra(PictureConfig.EXTRA_BOTTOM_PREVIEW, false);
         // 底部预览按钮过来
-        images = is_bottom_preview ? getIntent().
+        images =(List<LocalMedia>)( is_bottom_preview ? getIntent().
                 getParcelableArrayListExtra(PictureConfig.EXTRA_PREVIEW_SELECT_LIST)
-                : ImagesObservable.getInstance().readPreviewMediaData();
+                : ImagesObservable.getInstance().readPreviewMediaData());
         initViewPageAdapterData();
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -167,8 +168,11 @@ public class PicturePreviewActivity extends PictureBaseActivity implements
             mCbOriginal.setVisibility(View.VISIBLE);
             config.isCheckOriginalImage = isCheckOriginal;
             mCbOriginal.setChecked(config.isCheckOriginalImage);
-            mCbOriginal.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                config.isCheckOriginalImage = isChecked;
+            mCbOriginal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    config.isCheckOriginalImage = isChecked;
+                }
             });
         }
     }

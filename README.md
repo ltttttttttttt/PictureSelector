@@ -1,15 +1,8 @@
 # PictureSelector 2.0
    一款针对Android平台下的图片选择器，支持从相册获取图片、视频、音频&拍照，支持裁剪(单图or多图裁剪)、压缩、主题自定义配置等功能，支持动态获取权限&适配Android 5.0+系统的开源图片选择框架。<br>
   
-  <br>项目一直维护(有bug修复完一般会在周末更新)，如果有bug请描述清楚并可以提Issues，个人QQ 893855882 希望用得着的朋友点个star。 <br>
- Android开发交流 群一 619458861 (已满) <br>
- Android开发交流 群二 679824206 (已满) <br>
- Android开发交流 群三 854136996 <br>
- 
-   [我的博客地址](http://blog.csdn.net/luck_mw)   
-  
-   [体验Demo](https://github.com/LuckSiege/PictureSelector/raw/master/app/demo/app_2020_01_17_1034_2.4.6.apk)<br>
-  
+  <br>如果有bug请描述清楚并可以提Issues   ,是fork过来的,原项目地址 https://github.com/LuckSiege/PictureSelector <br>
+
 [![](https://jitpack.io/v/LuckSiege/PictureSelector.svg)](https://jitpack.io/#LuckSiege/PictureSelector)
 [![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen.svg)](https://github.com/LuckSiege)
 [![CSDN](https://img.shields.io/twitter/url/http/blog.csdn.net/luck_mw.svg?style=social)](http://blog.csdn.net/luck_mw)
@@ -116,11 +109,6 @@ PictureSelector.create(this).externalPictureVideo(video_path);
    See the License for the specific language governing permissions and
    limitations under the License.
 ```
-
-## 打赏
-
-# ~如果您觉得好，对你有帮助，可以给我一点打赏当做鼓励，蚊子再小也是肉呀(*^__^*) 嘻嘻…… 
-![image](https://github.com/LuckSiege/PictureSelector/blob/master/image/apply.png)
 
 ## 兼容性测试
 ******腾讯优测-深度测试-通过率达到100%******

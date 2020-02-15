@@ -64,7 +64,7 @@ public class PictureImageGridAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public void bindImagesData(List<LocalMedia> images) {
-        this.images = images == null ? new ArrayList<>() : images;
+        this.images = images == null ? new ArrayList<LocalMedia>() : images;
         notifyDataSetChanged();
     }
 
@@ -86,11 +86,11 @@ public class PictureImageGridAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public List<LocalMedia> getSelectedImages() {
-        return selectImages == null ? new ArrayList<>() : selectImages;
+        return selectImages == null ? new ArrayList<LocalMedia>() : selectImages;
     }
 
     public List<LocalMedia> getImages() {
-        return images == null ? new ArrayList<>() : images;
+        return images == null ? new ArrayList<LocalMedia>() : images;
     }
 
     @Override
@@ -117,9 +117,12 @@ public class PictureImageGridAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (getItemViewType(position) == PictureConfig.TYPE_CAMERA) {
             HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
-            headerHolder.headerView.setOnClickListener(v -> {
-                if (imageSelectChangedListener != null) {
-                    imageSelectChangedListener.onTakePhoto();
+            headerHolder.headerView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (imageSelectChangedListener != null) {
+                        imageSelectChangedListener.onTakePhoto();
+                    }
                 }
             });
         } else {
@@ -166,7 +169,26 @@ public class PictureImageGridAdapter extends RecyclerView.Adapter<RecyclerView.V
                 }
             }
             if (config.enablePreview || config.enPreviewVideo || config.enablePreviewAudio) {
-                contentHolder.btnCheck.setOnClickListener(v -> {
+                contentHolder.btnCheck.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // 如原图路径不存在或者路径存在但文件不存在
+                        String newPath = SdkVersionUtils.checkedAndroid_Q()
+                                ? PictureFileUtils.getPath(context, Uri.parse(path)) : path;
+                        if (!new File(newPath).exists()) {
+                            ToastUtils.s(context, PictureMimeType.s(context, mimeType));
+                            return;
+                        }
+                        if (SdkVersionUtils.checkedAndroid_Q()) {
+                            image.setRealPath(newPath);
+                        }
+                        changeCheckboxState(contentHolder, image);
+                    }
+                });
+            }
+            contentHolder.contentView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     // 如原图路径不存在或者路径存在但文件不存在
                     String newPath = SdkVersionUtils.checkedAndroid_Q()
                             ? PictureFileUtils.getPath(context, Uri.parse(path)) : path;
@@ -174,51 +196,38 @@ public class PictureImageGridAdapter extends RecyclerView.Adapter<RecyclerView.V
                         ToastUtils.s(context, PictureMimeType.s(context, mimeType));
                         return;
                     }
+                    int index = showCamera ? position - 1 : position;
+                    if (index == -1) {
+                        return;
+                    }
                     if (SdkVersionUtils.checkedAndroid_Q()) {
                         image.setRealPath(newPath);
                     }
-                    changeCheckboxState(contentHolder, image);
-                });
-            }
-            contentHolder.contentView.setOnClickListener(v -> {
-                // 如原图路径不存在或者路径存在但文件不存在
-                String newPath = SdkVersionUtils.checkedAndroid_Q()
-                        ? PictureFileUtils.getPath(context, Uri.parse(path)) : path;
-                if (!new File(newPath).exists()) {
-                    ToastUtils.s(context, PictureMimeType.s(context, mimeType));
-                    return;
-                }
-                int index = showCamera ? position - 1 : position;
-                if (index == -1) {
-                    return;
-                }
-                if (SdkVersionUtils.checkedAndroid_Q()) {
-                    image.setRealPath(newPath);
-                }
-                boolean eqResult =
-                        PictureMimeType.eqImage(mimeType) && config.enablePreview
-                                || PictureMimeType.eqVideo(mimeType) && (config.enPreviewVideo
-                                || config.selectionMode == PictureConfig.SINGLE)
-                                || PictureMimeType.eqAudio(mimeType) && (config.enablePreviewAudio
-                                || config.selectionMode == PictureConfig.SINGLE);
-                if (eqResult) {
-                    if (PictureMimeType.eqVideo(image.getMimeType())) {
-                        if (config.videoMinSecond > 0 && image.getDuration() < config.videoMinSecond) {
-                            // 视频小于最低指定的长度
-                            ToastUtils.s(context,
-                                    contentHolder.itemView.getContext().getString(R.string.picture_choose_min_seconds, config.videoMinSecond / 1000));
-                            return;
+                    boolean eqResult =
+                            PictureMimeType.eqImage(mimeType) && config.enablePreview
+                                    || PictureMimeType.eqVideo(mimeType) && (config.enPreviewVideo
+                                    || config.selectionMode == PictureConfig.SINGLE)
+                                    || PictureMimeType.eqAudio(mimeType) && (config.enablePreviewAudio
+                                    || config.selectionMode == PictureConfig.SINGLE);
+                    if (eqResult) {
+                        if (PictureMimeType.eqVideo(image.getMimeType())) {
+                            if (config.videoMinSecond > 0 && image.getDuration() < config.videoMinSecond) {
+                                // 视频小于最低指定的长度
+                                ToastUtils.s(context,
+                                        contentHolder.itemView.getContext().getString(R.string.picture_choose_min_seconds, config.videoMinSecond / 1000));
+                                return;
+                            }
+                            if (config.videoMaxSecond > 0 && image.getDuration() > config.videoMaxSecond) {
+                                // 视频时长超过了指定的长度
+                                ToastUtils.s(context,
+                                        contentHolder.itemView.getContext().getString(R.string.picture_choose_max_seconds, config.videoMaxSecond / 1000));
+                                return;
+                            }
                         }
-                        if (config.videoMaxSecond > 0 && image.getDuration() > config.videoMaxSecond) {
-                            // 视频时长超过了指定的长度
-                            ToastUtils.s(context,
-                                    contentHolder.itemView.getContext().getString(R.string.picture_choose_max_seconds, config.videoMaxSecond / 1000));
-                            return;
-                        }
+                        imageSelectChangedListener.onPictureClick(image, index);
+                    } else {
+                        changeCheckboxState(contentHolder, image);
                     }
-                    imageSelectChangedListener.onPictureClick(image, index);
-                } else {
-                    changeCheckboxState(contentHolder, image);
                 }
             });
         }

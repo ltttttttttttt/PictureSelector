@@ -196,7 +196,7 @@ public abstract class PictureBaseActivity extends AppCompatActivity implements H
      */
     private void initConfig() {
         // 已选图片列表
-        selectionMedias = config.selectionMedias == null ? new ArrayList<>() : config.selectionMedias;
+        selectionMedias = config.selectionMedias == null ? new ArrayList<LocalMedia>() : config.selectionMedias;
         if (config.style != null) {
             // 是否开启白色状态栏
             openWhiteStatusBar = config.style.isChangeStatusBarFontColor;
@@ -310,24 +310,27 @@ public abstract class PictureBaseActivity extends AppCompatActivity implements H
     protected void compressImage(final List<LocalMedia> result) {
         showPleaseDialog();
         if (config.synOrAsy) {
-            AsyncTask.SERIAL_EXECUTOR.execute(() -> {
-                try {
-                    List<File> files =
-                            Luban.with(getContext())
-                                    .loadMediaData(result)
-                                    .isCamera(config.camera)
-                                    .setTargetDir(config.compressSavePath)
-                                    .setCompressQuality(config.compressQuality)
-                                    .setFocusAlpha(config.focusAlpha)
-                                    .setNewCompressFileName(config.renameCompressFileName)
-                                    .ignoreBy(config.minimumCompressSize).get();
+            AsyncTask.SERIAL_EXECUTOR.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        List<File> files =
+                                Luban.with(getContext())
+                                        .loadMediaData(result)
+                                        .isCamera(config.camera)
+                                        .setTargetDir(config.compressSavePath)
+                                        .setCompressQuality(config.compressQuality)
+                                        .setFocusAlpha(config.focusAlpha)
+                                        .setNewCompressFileName(config.renameCompressFileName)
+                                        .ignoreBy(config.minimumCompressSize).get();
 
-                    // 线程切换
-                    mHandler.sendMessage(mHandler.obtainMessage(MSG_ASY_COMPRESSION_RESULT_SUCCESS,
-                            new Object[]{result, files}));
-                } catch (Exception e) {
-                    onResult(result);
-                    e.printStackTrace();
+                        // 线程切换
+                        mHandler.sendMessage(mHandler.obtainMessage(MSG_ASY_COMPRESSION_RESULT_SUCCESS,
+                                new Object[]{result, files}));
+                    } catch (Exception e) {
+                        onResult(result);
+                        e.printStackTrace();
+                    }
                 }
             });
         } else {
@@ -687,37 +690,40 @@ public abstract class PictureBaseActivity extends AppCompatActivity implements H
      *
      * @param images
      */
-    private void onResultToAndroidAsy(List<LocalMedia> images) {
-        AsyncTask.SERIAL_EXECUTOR.execute(() -> {
-            // Android Q 版本做拷贝应用内沙盒适配
-            int size = images.size();
-            for (int i = 0; i < size; i++) {
-                LocalMedia media = images.get(i);
-                if (media == null || TextUtils.isEmpty(media.getPath())) {
-                    continue;
-                }
-                boolean isCopyAndroidQToPath = !media.isCut()
-                        && !media.isCompressed()
-                        && TextUtils.isEmpty(media.getAndroidQToPath());
-                if (isCopyAndroidQToPath) {
-                    String pathToAndroidQ = AndroidQTransformUtils.getPathToAndroidQ(getContext(),
-                            config.cameraFileName, media);
-                    media.setAndroidQToPath(pathToAndroidQ);
-                    if (config.isCheckOriginalImage) {
-                        media.setOriginal(true);
-                        media.setOriginalPath(media.getAndroidQToPath());
+    private void onResultToAndroidAsy(final List<LocalMedia> images) {
+        AsyncTask.SERIAL_EXECUTOR.execute(new Runnable() {
+            @Override
+            public void run() {
+                // Android Q 版本做拷贝应用内沙盒适配
+                int size = images.size();
+                for (int i = 0; i < size; i++) {
+                    LocalMedia media = images.get(i);
+                    if (media == null || TextUtils.isEmpty(media.getPath())) {
+                        continue;
                     }
-                } else if (media.isCut() && media.isCompressed()) {
-                    media.setAndroidQToPath(media.getCompressPath());
-                } else {
-                    if (config.isCheckOriginalImage) {
-                        media.setOriginal(true);
-                        media.setOriginalPath(media.getAndroidQToPath());
+                    boolean isCopyAndroidQToPath = !media.isCut()
+                            && !media.isCompressed()
+                            && TextUtils.isEmpty(media.getAndroidQToPath());
+                    if (isCopyAndroidQToPath) {
+                        String pathToAndroidQ = AndroidQTransformUtils.getPathToAndroidQ(getContext(),
+                                config.cameraFileName, media);
+                        media.setAndroidQToPath(pathToAndroidQ);
+                        if (config.isCheckOriginalImage) {
+                            media.setOriginal(true);
+                            media.setOriginalPath(media.getAndroidQToPath());
+                        }
+                    } else if (media.isCut() && media.isCompressed()) {
+                        media.setAndroidQToPath(media.getCompressPath());
+                    } else {
+                        if (config.isCheckOriginalImage) {
+                            media.setOriginal(true);
+                            media.setOriginalPath(media.getAndroidQToPath());
+                        }
                     }
                 }
+                // 线程切换
+                mHandler.sendMessage(mHandler.obtainMessage(MSG_CHOOSE_RESULT_SUCCESS, images));
             }
-            // 线程切换
-            mHandler.sendMessage(mHandler.obtainMessage(MSG_CHOOSE_RESULT_SUCCESS, images));
         });
     }
 

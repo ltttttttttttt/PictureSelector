@@ -160,7 +160,7 @@ public class PictureVideoPlayActivity extends PictureBaseActivity implements
             iv_play.setVisibility(View.INVISIBLE);
         } else if (id == R.id.tv_confirm) {
             List<LocalMedia> result = new ArrayList<>();
-            result.add(getIntent().getParcelableExtra(PictureConfig.EXTRA_MEDIA_KEY));
+            result.add((LocalMedia) getIntent().getParcelableExtra(PictureConfig.EXTRA_MEDIA_KEY));
             setResult(RESULT_OK, new Intent()
                     .putParcelableArrayListExtra(PictureConfig.EXTRA_SELECT_LIST,
                             (ArrayList<? extends Parcelable>) result));
@@ -196,13 +196,16 @@ public class PictureVideoPlayActivity extends PictureBaseActivity implements
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        mp.setOnInfoListener((mp1, what, extra) -> {
-            if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
-                // video started
-                mVideoView.setBackgroundColor(Color.TRANSPARENT);
-                return true;
+        mp.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+            @Override
+            public boolean onInfo(MediaPlayer mp, int what, int extra) {
+                if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
+                    // video started
+                    mVideoView.setBackgroundColor(Color.TRANSPARENT);
+                    return true;
+                }
+                return false;
             }
-            return false;
         });
     }
 }

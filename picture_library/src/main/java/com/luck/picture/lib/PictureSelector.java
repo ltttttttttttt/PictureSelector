@@ -107,7 +107,7 @@ public final class PictureSelector {
     public static List<LocalMedia> obtainMultipleResult(Intent data) {
         if (data != null) {
             List<LocalMedia> result = data.getParcelableArrayListExtra(PictureConfig.EXTRA_RESULT_SELECTION);
-            return result == null ? new ArrayList<>() : result;
+            return result == null ? new ArrayList<LocalMedia>() : result;
         }
         return new ArrayList<>();
     }
@@ -128,7 +128,7 @@ public final class PictureSelector {
     public static List<LocalMedia> obtainSelectorList(Bundle bundle) {
         if (bundle != null) {
             List<LocalMedia> selectionMedias = bundle.getParcelableArrayList(PictureConfig.EXTRA_SELECT_LIST);
-            return selectionMedias == null ? new ArrayList<>() : selectionMedias;
+            return selectionMedias == null ? new ArrayList<LocalMedia>() : selectionMedias;
         }
         return new ArrayList<>();
     }

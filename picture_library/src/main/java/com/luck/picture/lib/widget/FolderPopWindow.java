@@ -4,10 +4,6 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
-
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +11,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.luck.picture.lib.R;
 import com.luck.picture.lib.adapter.PictureAlbumDirectoryAdapter;
@@ -94,8 +94,18 @@ public class FolderPopWindow extends PopupWindow {
         recyclerView = window.findViewById(R.id.folder_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
-        window.findViewById(R.id.rootView).setOnClickListener(v -> dismiss());
-        rootViewBg.setOnClickListener(v -> dismiss());
+        window.findViewById(R.id.rootView).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+        rootViewBg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 
     public void bindFolder(List<LocalMediaFolder> folders) {
@@ -153,7 +163,12 @@ public class FolderPopWindow extends PopupWindow {
      * 在android4.1.1和4.1.2版本关闭PopWindow
      */
     private void dismiss4Pop() {
-        new Handler().post(() -> FolderPopWindow.super.dismiss());
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                FolderPopWindow.super.dismiss();
+            }
+        });
     }
 
     /**
