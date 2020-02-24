@@ -55,4 +55,10 @@
     <string name="picture_choose_max_seconds">最大只能选择 %1$ds 以内的视频</string>
     <string name="picture_choose_min_seconds">不能选择低于 %1$ds 内的视频</string>
     <string name="picture_choose_limit_seconds">只能选择 %1$ds 至 %2$ds内的视频</string>
+
+    <string name="ucrop_label_original">原始比例</string>
+    <string name="ucrop_label_edit_photo">裁剪</string>
+
+    <string name="ucrop_menu_crop">裁剪</string>
+    <string name="ucrop_gif_tag">动图</string>
 </resources>

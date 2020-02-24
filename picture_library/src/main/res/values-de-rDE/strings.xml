@@ -55,4 +55,9 @@
     <string name="picture_choose_max_seconds">Nur Videos innerhalb von %1$ds können ausgewählt werden</string>
     <string name="picture_choose_min_seconds">Video nicht weniger als %1$ds auswählen</string>
     <string name="picture_choose_limit_seconds">Nur Videos innerhalb von %1$ds bis %2$ds können ausgewählt werden</string>
+
+    <string name="ucrop_label_edit_photo">Foto editieren</string>
+    <string name="ucrop_label_original">Original</string>
+    <string name="ucrop_menu_crop">Zuschneiden</string>
+    <string name="ucrop_gif_tag">Bewegen</string>
 </resources>

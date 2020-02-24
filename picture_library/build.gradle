@@ -10,6 +10,7 @@ android {
         targetSdkVersion cfgs.targetSdkVersion
         versionCode cfgs.versionCode
         versionName cfgs.versionName
+        vectorDrawables.useSupportLibrary = true
     }
 
 //    compileOptions {//不使用java8
@@ -27,12 +28,13 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation project(':ucrop')
+//    implementation project(':ucrop')
     //noinspection GradleCompatible
     implementation "androidx.appcompat:appcompat:${cfgs.version_appcompat}"
     //noinspection GradleCompatible
     implementation "androidx.recyclerview:recyclerview:${cfgs.version_recyclerview}"
     implementation "androidx.concurrent:concurrent-futures:${cfgs.futures_version}"
+    implementation "androidx.exifinterface:exifinterface:${cfgs.androidx_exifinterface_version}"
 //    implementation "androidx.camera:camera-lifecycle:${cfgs.lifecycle_version}" //去掉相机库
 //    api "androidx.camera:camera-core:${cfgs.camerax_version}"
 //    api "androidx.camera:camera-camera2:${cfgs.camerax_version}"
