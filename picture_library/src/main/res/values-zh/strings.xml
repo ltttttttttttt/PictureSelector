@@ -61,4 +61,5 @@
 
     <string name="ucrop_menu_crop">裁剪</string>
     <string name="ucrop_gif_tag">动图</string>
+    <string name="audio">音频</string>
 </resources>

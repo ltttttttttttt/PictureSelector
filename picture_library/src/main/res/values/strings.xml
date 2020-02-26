@@ -69,5 +69,6 @@
     <string name="ucrop_rotate">Rotate</string>
     <string name="ucrop_scale">Scale</string>
     <string name="ucrop_crop">Crop</string>
+    <string name="audio">音频</string>
 
 </resources>

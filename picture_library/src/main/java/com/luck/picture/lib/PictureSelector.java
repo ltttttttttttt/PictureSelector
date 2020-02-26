@@ -198,13 +198,18 @@ public final class PictureSelector {
      *
      * @param path
      */
-    public void externalPictureAudio(String path) {
+    @Nullable
+    public PicturePlayAudioDialog externalPictureAudio(String path, boolean playNow) {
         if (!DoubleUtils.isFastDoubleClick()) {
-            Intent intent = new Intent(getActivity(), PicturePlayAudioActivity.class);
-            intent.putExtra(PictureConfig.EXTRA_AUDIO_PATH, path);
-            getActivity().startActivity(intent);
-            getActivity().overridePendingTransition(R.anim.picture_anim_enter, 0);
+            //Intent intent = new Intent(getActivity(), PicturePlayAudioActivity.class);
+            //intent.putExtra(PictureConfig.EXTRA_AUDIO_PATH, path);
+            //getActivity().startActivity(intent);
+            //getActivity().overridePendingTransition(R.anim.picture_anim_enter, 0);
+            //改为弹窗样式
+            return new PicturePlayAudioDialog(getActivity(), R.style.Picture_Theme_Dialog_AudioStyle)
+                    .init(path, playNow);
         }
+        return null;
     }
 
     /**

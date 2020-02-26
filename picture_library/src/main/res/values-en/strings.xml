@@ -68,4 +68,5 @@
     <string name="ucrop_crop">Crop</string>
 
     <string name="ucrop_gif_tag">gif</string>
+    <string name="audio">Audio</string>
 </resources>

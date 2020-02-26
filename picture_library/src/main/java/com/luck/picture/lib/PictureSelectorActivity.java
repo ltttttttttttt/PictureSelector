@@ -1041,7 +1041,8 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
                 result.add(media);
                 onResult(result);
             } else {
-                audioDialog(media.getPath());
+                //audioDialog(media.getPath());//更换显示方式
+                PictureSelector.create(this).externalPictureAudio(media.getPath(), true);
             }
         } else {
             // image

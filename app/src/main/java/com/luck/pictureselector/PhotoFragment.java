@@ -182,7 +182,7 @@ public class PhotoFragment extends Fragment implements View.OnClickListener,
                         break;
                     case PictureConfig.TYPE_AUDIO:
                         // 预览音频
-                        PictureSelector.create(PhotoFragment.this).externalPictureAudio(media.getPath());
+                        PictureSelector.create(PhotoFragment.this).externalPictureAudio(media.getPath(),true);
                         break;
                     default:
                         // 预览图片 可自定长按保存路径

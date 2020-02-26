@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.luck.picture.lib.PicturePlayAudioDialog;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.broadcast.BroadcastAction;
 import com.luck.picture.lib.broadcast.BroadcastManager;
@@ -187,9 +188,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     case PictureConfig.TYPE_AUDIO:
                         // 预览音频
-                        PictureSelector.create(MainActivity.this)
-                                .externalPictureAudio(
-                                        media.getPath().startsWith("content://") ? media.getAndroidQToPath() : media.getPath());
+                        PicturePlayAudioDialog picturePlayAudioDialog = PictureSelector.create(MainActivity.this)
+                                .externalPictureAudio(media.getPath().startsWith("content://") ? media.getAndroidQToPath() : media.getPath(), true);
+                        if (picturePlayAudioDialog != null) {
+                            picturePlayAudioDialog.setLoop(false);//是否循环播放,默认false
+                        }
                         break;
                     default:
                         // 预览图片 可自定长按保存路径
