@@ -5,6 +5,7 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
@@ -50,7 +51,9 @@ public class PictureVideoPlayActivity extends PictureBaseActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
         super.onCreate(savedInstanceState);
     }
 

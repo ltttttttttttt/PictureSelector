@@ -36,6 +36,7 @@ import com.luck.picture.lib.broadcast.BroadcastAction;
 import com.luck.picture.lib.broadcast.BroadcastManager;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.config.PictureSelectionConfig;
 import com.luck.picture.lib.decoration.GridSpacingItemDecoration;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.language.LanguageConfig;
@@ -51,6 +52,8 @@ import com.luck.picture.lib.tools.ToastUtils;
 import com.luck.picture.lib.tools.ValueOf;
 import com.luck.pictureselector.adapter.GridImageAdapter;
 import com.luck.pictureselector.listener.DragListener;
+import com.yalantis.ucrop.UCrop;
+import com.yalantis.ucrop.model.CutInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -203,7 +206,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 .themeStyle(R.style.picture_default_style) // xml设置主题
                                 .setPictureStyle(mPictureParameterStyle)// 动态自定义相册主题
                                 //.setPictureWindowAnimationStyle(animationStyle)// 自定义页面启动动画
-                                .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)// 设置相册Activity方向，不设置默认使用系统
+                                .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)// 设置相册Activity方向，不设置默认使用系统
+                                //.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)// 设置相册Activity方向，不设置默认使用系统
                                 .isNotPreviewDownload(true)// 预览图片长按是否可以下载
                                 //.bindCustomPlayVideoCallback(callback)// 自定义播放回调控制，用户可以使用自己的视频播放界面
                                 .loadImageEngine(GlideEngine.createGlideEngine())// 外部传入图片加载引擎，必传项
@@ -436,7 +440,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .imageSpanCount(4)// 每行显示个数
                         .isReturnEmpty(false)// 未选择数据时点击按钮是否可以返回
                         //.isAndroidQTransform(false)// 是否需要处理Android Q 拷贝至应用沙盒的操作，只针对compress(false); && enableCrop(false);有效,默认处理
-                        .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)// 设置相册Activity方向，不设置默认使用系统
+                        .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)// 设置相册Activity方向，不设置默认使用系统as3.6报错
+                        //.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)// 设置相册Activity方向，不设置默认使用系统
                         .isOriginalImageControl(cb_original.isChecked())// 是否显示原图控制按钮，如果设置为true则用户可以自由选择是否使用原图，压缩、裁剪功能将会失效
                         //.bindCustomPlayVideoCallback(callback)// 自定义视频播放回调控制，用户可以使用自己的视频播放界面
                         //.cameraFileName(System.currentTimeMillis() +".jpg")    // 重命名拍照文件名、如果是相册拍照则内部会自动拼上当前时间戳防止重复，注意这个只在使用相机时可以使用，如果使用相机又开启了压缩或裁剪 需要配合压缩和裁剪文件名api
@@ -505,6 +510,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 }
                                 mAdapter.setList(result);
                                 mAdapter.notifyDataSetChanged();
+
+                                //测试裁切图片
+                                String[] list = new String[result.size()];
+                                for (int i = 0; i < result.size(); i++) {
+                                    list[i] = result.get(i).getPath();
+                                }
+                                PictureSelector.create(MainActivity.this).gotoCropImage(PictureSelectionConfig.getInstance(), list);
                             }
 
                             @Override
@@ -598,6 +610,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
+                case UCrop.REQUEST_MULTI_CROP:
+                    // 裁剪数据
+                    List<CutInfo> list2 = UCrop.getMultipleOutput(data);
+                    ArrayList<LocalMedia> localMedia = new ArrayList<>();
+                    for (CutInfo info : list2) {
+                        localMedia.add(new LocalMedia(info.getCutPath(), 0, false, 0, 1, 0));
+                    }
+                    mAdapter.setList(localMedia);
+                    mAdapter.notifyDataSetChanged();
+                    break;
                 case PictureConfig.CHOOSE_REQUEST:
                     // 图片选择结果回调
                     List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
@@ -620,6 +642,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     mAdapter.setList(selectList);
                     mAdapter.notifyDataSetChanged();
+
+                    //测试裁切图片
+                    String[] list = new String[selectList.size()];
+                    for (int i = 0; i < selectList.size(); i++) {
+                        list[i] = selectList.get(i).getPath();
+                    }
+                    PictureSelector.create(MainActivity.this).gotoCropImage(PictureSelectionConfig.getInstance(), list);
                     break;
             }
         }
