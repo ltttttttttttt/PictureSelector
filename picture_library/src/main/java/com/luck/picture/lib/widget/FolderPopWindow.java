@@ -3,7 +3,6 @@ package com.luck.picture.lib.widget;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -163,7 +162,7 @@ public class FolderPopWindow extends PopupWindow {
      * 在android4.1.1和4.1.2版本关闭PopWindow
      */
     private void dismiss4Pop() {
-        new Handler().post(new Runnable() {
+        PictureSelectionConfig.resourcesConfig.runMainThread(new Runnable() {
             @Override
             public void run() {
                 FolderPopWindow.super.dismiss();

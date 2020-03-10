@@ -32,6 +32,7 @@ import com.luck.picture.lib.adapter.PictureAlbumDirectoryAdapter;
 import com.luck.picture.lib.adapter.PictureImageGridAdapter;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.config.PictureSelectionConfig;
 import com.luck.picture.lib.decoration.GridSpacingItemDecoration;
 import com.luck.picture.lib.dialog.PhotoItemSelectedDialog;
 import com.luck.picture.lib.dialog.PictureCustomDialog;
@@ -40,7 +41,6 @@ import com.luck.picture.lib.entity.LocalMediaFolder;
 import com.luck.picture.lib.model.LocalMediaLoader;
 import com.luck.picture.lib.observable.ImagesObservable;
 import com.luck.picture.lib.permissions.PermissionChecker;
-import com.luck.picture.lib.style.PictureWindowAnimationStyle;
 import com.luck.picture.lib.tools.AttrsUtils;
 import com.luck.picture.lib.tools.BitmapUtils;
 import com.luck.picture.lib.tools.DateUtils;
@@ -768,14 +768,12 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
             mTvPlayPause = audioDialog.findViewById(R.id.tv_PlayPause);
             mTvStop = audioDialog.findViewById(R.id.tv_Stop);
             mTvQuit = audioDialog.findViewById(R.id.tv_Quit);
-            if (mHandler != null) {
-                mHandler.postDelayed(new Runnable() {
+                PictureSelectionConfig.resourcesConfig.runMainThread(new Runnable() {
                     @Override
                     public void run() {
                         initPlayer(path);
                     }
                 }, 30);
-            }
             mTvPlayPause.setOnClickListener(new audioOnClick(path));
             mTvStop.setOnClickListener(new audioOnClick(path));
             mTvQuit.setOnClickListener(new audioOnClick(path));
@@ -801,7 +799,7 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
                     if (mHandler != null) {
                         mHandler.removeCallbacks(mRunnable);
                     }
-                    new Handler().postDelayed(new Runnable() {
+                    PictureSelectionConfig.resourcesConfig.runMainThread(new Runnable() {
                         @Override
                         public void run() {
                             stop(path);
@@ -885,7 +883,7 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
             }
             if (id == R.id.tv_Quit) {
                 if (mHandler != null) {
-                    mHandler.postDelayed(new Runnable() {
+                    PictureSelectionConfig.resourcesConfig.runMainThread(new Runnable() {
                         @Override
                         public void run() {
                             stop(path);

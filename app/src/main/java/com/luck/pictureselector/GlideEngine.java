@@ -248,6 +248,11 @@ public class GlideEngine implements ResourcesConfig {
     }
 
     @Override
+    public void runMainThread(@NonNull Runnable runnable, long time) {
+        handler.postDelayed(runnable,time);
+    }
+
+    @Override
     public Dialog showLoadingDialog(Context context) {
         return null;
     }

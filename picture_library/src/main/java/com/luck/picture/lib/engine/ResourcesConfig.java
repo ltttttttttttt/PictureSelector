@@ -92,6 +92,8 @@ public interface ResourcesConfig {
      */
     void runMainThread(@NonNull Runnable runnable);
 
+    void runMainThread(@NonNull Runnable runnable, long time);
+
     /**
      * show出加载中的dialog,如果返回null就使用默认的
      */

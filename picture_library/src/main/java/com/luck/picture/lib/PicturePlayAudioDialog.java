@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.luck.picture.lib.config.PictureSelectionConfig;
 import com.luck.picture.lib.tools.DateUtils;
 
 /**
@@ -74,7 +75,7 @@ public class PicturePlayAudioDialog extends Dialog {
         mTvPlayPause = findViewById(R.id.tv_PlayPause);
         TextView mTvStop = findViewById(R.id.tv_Stop);
         TextView mTvQuit = findViewById(R.id.tv_Quit);
-        handler.postDelayed(new Runnable() {
+        PictureSelectionConfig.resourcesConfig.runMainThread(new Runnable() {
             @Override
             public void run() {
                 initPlayer(path, playNow);
@@ -96,7 +97,7 @@ public class PicturePlayAudioDialog extends Dialog {
         mTvQuit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                handler.postDelayed(new Runnable() {
+                PictureSelectionConfig.resourcesConfig.runMainThread(new Runnable() {
                     @Override
                     public void run() {
                         stop(path);
@@ -132,7 +133,7 @@ public class PicturePlayAudioDialog extends Dialog {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 handler.removeCallbacks(mRunnable);
-                handler.postDelayed(new Runnable() {
+                PictureSelectionConfig.resourcesConfig.runMainThread(new Runnable() {
                     @Override
                     public void run() {
                         stop(path);

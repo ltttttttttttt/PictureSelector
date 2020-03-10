@@ -9,6 +9,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.config.PictureSelectionConfig;
 import com.luck.picture.lib.tools.DateUtils;
 
 /**
@@ -50,7 +51,7 @@ public class PicturePlayAudioActivity extends PictureBaseActivity implements Vie
         tv_PlayPause = findViewById(R.id.tv_PlayPause);
         tv_Stop = findViewById(R.id.tv_Stop);
         tv_Quit = findViewById(R.id.tv_Quit);
-        handler.postDelayed(new Runnable() {
+        PictureSelectionConfig.resourcesConfig.runMainThread(new Runnable() {
             @Override
             public void run() {
                 initPlayer(audio_path);
