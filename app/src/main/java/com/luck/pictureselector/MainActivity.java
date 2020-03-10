@@ -529,7 +529,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 PictureSelector.create(MainActivity.this)
                         .openCamera(chooseMode)// 单独拍照，也可录像或也可音频 看你传入的类型是图片or视频
                         .theme(themeId)// 主题样式设置 具体参考 values/styles
-                        .loadImageEngine(GlideEngine.createGlideEngine())// 外部传入图片加载引擎，必传项
+                        //.loadImageEngine(GlideEngine.createGlideEngine())// 外部传入图片加载引擎，必传项,因为在初始化的时候传入了,所以不需要再传
                         .setPictureStyle(mPictureParameterStyle)// 动态自定义相册主题
                         .setPictureCropStyle(mCropParameterStyle)// 动态自定义裁剪主题
                         .setPictureWindowAnimationStyle(mWindowAnimationStyle)// 自定义相册启动退出动画

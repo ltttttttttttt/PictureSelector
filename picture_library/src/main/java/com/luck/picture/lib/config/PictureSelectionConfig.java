@@ -221,7 +221,7 @@ public final class PictureSelectionConfig implements Parcelable {
         renameCompressFileName = "";
         renameCropFileName = "";
         selectionMedias = new ArrayList<>();
-        resourcesConfig = null;
+        //resourcesConfig = null;
         listener = null;
         customVideoPlayCallback = null;
         uCropOptions = null;
