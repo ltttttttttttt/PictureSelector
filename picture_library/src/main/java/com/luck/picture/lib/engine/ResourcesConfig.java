@@ -1,5 +1,6 @@
 package com.luck.picture.lib.engine;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.widget.ImageView;
 
@@ -9,11 +10,11 @@ import com.luck.picture.lib.listener.ImageCompleteCallback;
 import com.luck.picture.lib.widget.longimage.SubsamplingScaleImageView;
 
 /**
- * @author：luck
- * @date：2019-11-13 16:59
- * @describe：图片加载引擎接口
+ * @author :lt
+ * @date : 2020-3-6
+ * @describe :全局重资源配置
  */
-public interface ImageEngine {
+public interface ResourcesConfig {
     /**
      * 加载图片
      *
@@ -69,4 +70,30 @@ public interface ImageEngine {
      * @param imageView 承载图片ImageView
      */
     void loadGridImage(@NonNull Context context, @NonNull String url, @NonNull ImageView imageView);
+
+    /**
+     * 发送任务到子线程
+     *
+     * @param runnable
+     */
+    void runIoThread(@NonNull Runnable runnable);
+
+    /**
+     * 发送任务到单例队列子线程
+     *
+     * @param runnable
+     */
+    void runSingleIoThread(@NonNull Runnable runnable);
+
+    /**
+     * 发送任务到主线程
+     *
+     * @param runnable
+     */
+    void runMainThread(@NonNull Runnable runnable);
+
+    /**
+     * show出加载中的dialog,如果返回null就使用默认的
+     */
+    Dialog showLoadingDialog(Context context);
 }

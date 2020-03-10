@@ -164,8 +164,8 @@ public class PictureImageGridAdapter extends RecyclerView.Adapter<RecyclerView.V
             if (config.chooseMode == PictureMimeType.ofAudio()) {
                 contentHolder.ivPicture.setImageResource(R.drawable.picture_audio_placeholder);
             } else {
-                if (config.imageEngine != null) {
-                    config.imageEngine.loadGridImage(context, path, contentHolder.ivPicture);
+                if (config.resourcesConfig != null) {
+                    config.resourcesConfig.loadGridImage(context, path, contentHolder.ivPicture);
                 }
             }
             if (config.enablePreview || config.enPreviewVideo || config.enablePreviewAudio) {

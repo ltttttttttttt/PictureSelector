@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 
+import com.luck.picture.lib.config.PictureSelectionConfig;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -447,6 +449,8 @@ public class SPUtils {
 
 
     private static Application getApplicationByReflect() {
+        if (true)
+            return PictureSelectionConfig.application;
         try {
             @SuppressLint("PrivateApi")
             Class<?> activityThread = Class.forName("android.app.ActivityThread");

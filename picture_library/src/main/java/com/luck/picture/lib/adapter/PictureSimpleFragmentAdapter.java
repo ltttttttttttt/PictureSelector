@@ -122,17 +122,17 @@ public class PictureSimpleFragmentAdapter extends PagerAdapter {
                 longImg.setVisibility(eqLongImg && !isGif ? View.VISIBLE : View.GONE);
                 // 压缩过的gif就不是gif了
                 if (isGif && !media.isCompressed()) {
-                    if (config != null && config.imageEngine != null) {
-                        config.imageEngine.loadAsGifImage
+                    if (config != null && config.resourcesConfig != null) {
+                        config.resourcesConfig.loadAsGifImage
                                 (contentView.getContext(), path, imageView);
                     }
                 } else {
-                    if (config != null && config.imageEngine != null) {
+                    if (config != null && config.resourcesConfig != null) {
                         if (eqLongImg) {
                             displayLongPic(SdkVersionUtils.checkedAndroid_Q()
                                     ? Uri.parse(path) : Uri.fromFile(new File(path)), longImg);
                         } else {
-                            config.imageEngine.loadImage
+                            config.resourcesConfig.loadImage
                                     (contentView.getContext(), path, imageView);
                         }
                     }

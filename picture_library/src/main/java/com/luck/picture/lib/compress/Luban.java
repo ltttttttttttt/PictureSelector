@@ -2,7 +2,6 @@ package com.luck.picture.lib.compress;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.config.PictureSelectionConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.tools.AndroidQTransformUtils;
 import com.luck.picture.lib.tools.DateUtils;
@@ -149,7 +149,7 @@ public class Luban implements Handler.Callback {
         index = -1;
         while (iterator.hasNext()) {
             final InputStreamProvider path = iterator.next();
-            AsyncTask.SERIAL_EXECUTOR.execute(new Runnable() {
+            PictureSelectionConfig.resourcesConfig.runSingleIoThread(new Runnable() {
                 @Override
                 public void run() {
                     try {

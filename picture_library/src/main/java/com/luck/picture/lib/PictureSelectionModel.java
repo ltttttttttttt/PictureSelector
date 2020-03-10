@@ -13,7 +13,7 @@ import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.config.PictureSelectionConfig;
 import com.luck.picture.lib.config.UCropOptions;
-import com.luck.picture.lib.engine.ImageEngine;
+import com.luck.picture.lib.engine.ResourcesConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
 import com.luck.picture.lib.listener.OnVideoSelectedPlayCallback;
@@ -83,9 +83,9 @@ public class PictureSelectionModel {
      * @param engine Image Load the engine
      * @return
      */
-    public PictureSelectionModel loadImageEngine(ImageEngine engine) {
-        if (selectionConfig.imageEngine != engine) {
-            selectionConfig.imageEngine = engine;
+    public PictureSelectionModel loadImageEngine(ResourcesConfig engine) {
+        if (selectionConfig.resourcesConfig != engine) {
+            selectionConfig.resourcesConfig = engine;
         }
         return this;
     }

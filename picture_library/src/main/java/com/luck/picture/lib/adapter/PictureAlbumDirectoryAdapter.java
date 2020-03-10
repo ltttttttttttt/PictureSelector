@@ -67,8 +67,8 @@ public class PictureAlbumDirectoryAdapter extends RecyclerView.Adapter<PictureAl
         if (chooseMode == PictureMimeType.ofAudio()) {
             holder.ivFirstImage.setImageResource(R.drawable.picture_audio_placeholder);
         } else {
-            if (config.imageEngine != null) {
-                config.imageEngine.loadFolderImage(holder.itemView.getContext(),
+            if (config.resourcesConfig != null) {
+                config.resourcesConfig.loadFolderImage(holder.itemView.getContext(),
                         imagePath, holder.ivFirstImage);
             }
         }

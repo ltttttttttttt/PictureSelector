@@ -1,9 +1,12 @@
 package com.luck.pictureselector;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -16,19 +19,23 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.ImageViewTarget;
-import com.luck.picture.lib.engine.ImageEngine;
+import com.luck.picture.lib.engine.ResourcesConfig;
 import com.luck.picture.lib.listener.ImageCompleteCallback;
 import com.luck.picture.lib.tools.MediaUtils;
 import com.luck.picture.lib.widget.longimage.ImageSource;
 import com.luck.picture.lib.widget.longimage.ImageViewState;
 import com.luck.picture.lib.widget.longimage.SubsamplingScaleImageView;
 
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author：luck
  * @date：2019-11-13 17:02
  * @describe：Glide加载引擎
  */
-public class GlideEngine implements ImageEngine {
+public class GlideEngine implements ResourcesConfig {
 
     /**
      * 加载图片
@@ -211,6 +218,38 @@ public class GlideEngine implements ImageEngine {
                 .centerCrop()
                 .apply(new RequestOptions().placeholder(R.drawable.picture_image_placeholder))
                 .into(imageView);
+    }
+
+    private ThreadPoolExecutor cacheThreadExecutor = /*Executors.newCachedThreadPool()*/
+            new ThreadPoolExecutor(100, 100,
+                    60L, TimeUnit.SECONDS,
+                    new LinkedBlockingQueue());
+
+    @Override
+    public void runIoThread(@NonNull Runnable runnable) {
+        cacheThreadExecutor.submit(runnable);
+    }
+
+    ThreadPoolExecutor singleThreadExecutor = /*Executors.newSingleThreadExecutor()*/
+            new ThreadPoolExecutor(1, 1,
+                    15L, TimeUnit.SECONDS,
+                    new LinkedBlockingQueue());
+
+    @Override
+    public void runSingleIoThread(@NonNull Runnable runnable) {
+        singleThreadExecutor.submit(runnable);
+    }
+
+    private Handler handler = new Handler(Looper.getMainLooper());
+
+    @Override
+    public void runMainThread(@NonNull Runnable runnable) {
+        handler.post(runnable);
+    }
+
+    @Override
+    public Dialog showLoadingDialog(Context context) {
+        return null;
     }
 
 

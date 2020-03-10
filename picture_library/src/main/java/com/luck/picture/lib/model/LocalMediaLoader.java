@@ -3,7 +3,6 @@ package com.luck.picture.lib.model;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -148,7 +147,7 @@ public class LocalMediaLoader implements Handler.Callback {
 
 
     public void loadAllMedia() {
-        AsyncTask.SERIAL_EXECUTOR.execute(new Runnable() {
+        PictureSelectionConfig.resourcesConfig.runSingleIoThread(new Runnable() {
             @Override
             public void run() {
                 Cursor data = mContext.getContentResolver().query(QUERY_URI, PROJECTION, getSelection(), getSelectionArgs(), ORDER_BY);

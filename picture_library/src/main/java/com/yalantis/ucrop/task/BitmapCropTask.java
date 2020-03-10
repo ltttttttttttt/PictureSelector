@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
@@ -13,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.exifinterface.media.ExifInterface;
 
+import com.luck.picture.lib.config.PictureSelectionConfig;
 import com.yalantis.ucrop.callback.BitmapCropCallback;
 import com.yalantis.ucrop.model.CropParameters;
 import com.yalantis.ucrop.model.ImageState;
@@ -28,6 +28,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
+import java.util.concurrent.Executor;
 
 /**
  * Crops part of image that fills the crop bounds.
@@ -36,7 +37,7 @@ import java.lang.ref.WeakReference;
  * Then image is rotated accordingly.
  * Finally new Bitmap object is created and saved to file.
  */
-public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
+public class BitmapCropTask /*extends AsyncTask<Void, Void, Throwable>*/ {
 
     private static final String TAG = "BitmapCropTask";
 
@@ -85,9 +86,8 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
         return mContextWeakReference.get();
     }
 
-    @Override
     @Nullable
-    protected Throwable doInBackground(Void... params) {
+    protected Throwable doInBackground() {
         if (mViewBitmap == null) {
             return new NullPointerException("ViewBitmap is null");
         } else if (mViewBitmap.isRecycled()) {
@@ -218,7 +218,6 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
                 || mCurrentAngle != 0;
     }
 
-    @Override
     protected void onPostExecute(@Nullable Throwable t) {
         if (mCropCallback != null) {
             if (t == null) {
@@ -230,4 +229,18 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
         }
     }
 
+    public void executeOnExecutor(Executor threadPoolExecutor) {
+        PictureSelectionConfig.resourcesConfig.runIoThread(new Runnable() {
+            @Override
+            public void run() {
+                final Throwable throwable = doInBackground();
+                PictureSelectionConfig.resourcesConfig.runMainThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        onPostExecute(throwable);
+                    }
+                });
+            }
+        });
+    }
 }

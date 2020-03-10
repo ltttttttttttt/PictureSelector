@@ -1,13 +1,13 @@
 package com.luck.picture.lib;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -60,7 +60,7 @@ public abstract class PictureBaseActivity extends AppCompatActivity implements H
     protected PictureSelectionConfig config;
     protected boolean openWhiteStatusBar, numComplete;
     protected int colorPrimary, colorPrimaryDark;
-    protected PictureLoadingDialog mLoadingDialog;
+    protected Dialog mLoadingDialog;
     protected List<LocalMedia> selectionMedias;
     protected Handler mHandler;
     protected View container;
@@ -277,12 +277,12 @@ public abstract class PictureBaseActivity extends AppCompatActivity implements H
     protected void showPleaseDialog() {
         if (!isFinishing()) {
             if (mLoadingDialog == null) {
+                mLoadingDialog = PictureSelectionConfig.resourcesConfig.showLoadingDialog(getContext());
+            }
+            if (mLoadingDialog == null) {
                 mLoadingDialog = new PictureLoadingDialog(getContext());
+                mLoadingDialog.show();
             }
-            if (mLoadingDialog.isShowing()) {
-                mLoadingDialog.dismiss();
-            }
-            mLoadingDialog.show();
         }
     }
 
@@ -310,7 +310,7 @@ public abstract class PictureBaseActivity extends AppCompatActivity implements H
     protected void compressImage(final List<LocalMedia> result) {
         showPleaseDialog();
         if (config.synOrAsy) {
-            AsyncTask.SERIAL_EXECUTOR.execute(new Runnable() {
+            PictureSelectionConfig.resourcesConfig.runSingleIoThread(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -691,7 +691,7 @@ public abstract class PictureBaseActivity extends AppCompatActivity implements H
      * @param images
      */
     private void onResultToAndroidAsy(final List<LocalMedia> images) {
-        AsyncTask.SERIAL_EXECUTOR.execute(new Runnable() {
+        PictureSelectionConfig.resourcesConfig.runSingleIoThread(new Runnable() {
             @Override
             public void run() {
                 // Android Q 版本做拷贝应用内沙盒适配

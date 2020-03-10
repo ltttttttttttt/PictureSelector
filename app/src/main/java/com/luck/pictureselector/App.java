@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.luck.picture.lib.app.IApp;
 import com.luck.picture.lib.app.PictureAppMaster;
+import com.luck.picture.lib.config.PictureSelectionConfig;
 import com.luck.picture.lib.crash.PictureSelectorCrashUtils;
 
 
@@ -28,6 +29,9 @@ public class App extends Application implements IApp {
 
         });
         /** PictureSelector日志管理配制结束 **/
+
+        //初始化图片选择库
+        PictureSelectionConfig.init(this, GlideEngine.createGlideEngine());
 
     }
 

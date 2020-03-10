@@ -512,11 +512,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 mAdapter.notifyDataSetChanged();
 
                                 //测试裁切图片
-                                String[] list = new String[result.size()];
-                                for (int i = 0; i < result.size(); i++) {
-                                    list[i] = result.get(i).getPath();
-                                }
-                                PictureSelector.create(MainActivity.this).gotoCropImage(PictureSelectionConfig.getInstance(), list);
+                                //String[] list = new String[result.size()];
+                                //for (int i = 0; i < result.size(); i++) {
+                                //    list[i] = result.get(i).getPath();
+                                //}
+                                //PictureSelector.create(MainActivity.this).gotoCropImage(PictureSelectionConfig.getInstance(), list);
                             }
 
                             @Override

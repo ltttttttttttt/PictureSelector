@@ -10,7 +10,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.PointF;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -35,6 +34,7 @@ import com.luck.picture.lib.broadcast.BroadcastAction;
 import com.luck.picture.lib.broadcast.BroadcastManager;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.config.PictureSelectionConfig;
 import com.luck.picture.lib.dialog.PictureCustomDialog;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.ImageCompleteCallback;
@@ -281,15 +281,15 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
                     longImageView.setVisibility(eqLongImg && !isGif ? View.VISIBLE : View.GONE);
                     // 压缩过的gif就不是gif了
                     if (isGif && !media.isCompressed()) {
-                        if (config != null && config.imageEngine != null) {
-                            config.imageEngine.loadAsGifImage
+                        if (config != null && config.resourcesConfig != null) {
+                            config.resourcesConfig.loadAsGifImage
                                     (getContext(), path, imageView);
                         }
                     } else {
-                        if (config != null && config.imageEngine != null) {
+                        if (config != null && config.resourcesConfig != null) {
                             if (isHttp) {
                                 // 网络图片
-                                config.imageEngine.loadImage(contentView.getContext(), path,
+                                config.resourcesConfig.loadImage(contentView.getContext(), path,
                                         imageView, longImageView, new ImageCompleteCallback() {
                                             @Override
                                             public void onShowLoading() {
@@ -306,7 +306,7 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
                                     displayLongPic(isAndroidQ
                                             ? Uri.parse(path) : Uri.fromFile(new File(path)), longImageView);
                                 } else {
-                                    config.imageEngine.loadImage(contentView.getContext(), path, imageView);
+                                    config.resourcesConfig.loadImage(contentView.getContext(), path, imageView);
                                 }
                             }
                         }
@@ -496,7 +496,7 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
             mHandler.sendEmptyMessage(SAVE_IMAGE_ERROR);
             return;
         }
-        AsyncTask.SERIAL_EXECUTOR.execute(new Runnable() {
+        PictureSelectionConfig.resourcesConfig.runSingleIoThread(new Runnable() {
             @Override
             public void run() {
                 OutputStream outputStream = null;
@@ -547,7 +547,7 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
     }
 
 
-    public class LoadDataThread extends Thread {
+    public class LoadDataThread {
         private String path;
 
         public LoadDataThread(String path) {
@@ -555,13 +555,17 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
             this.path = path;
         }
 
-        @Override
-        public void run() {
-            try {
-                showLoadingImage(path);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        public void start() {
+            PictureSelectionConfig.resourcesConfig.runIoThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        showLoadingImage(path);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
 
     }
@@ -623,7 +627,8 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
             int ava = 0;
             long start = System.currentTimeMillis();
             BufferedInputStream bin = new BufferedInputStream(u.openStream());
-            while ((read = bin.read(buffer)) > -1) {
+            //判断mLoadDataThread是因为destroy后需要停止
+            while (mLoadDataThread != null && (read = bin.read(buffer)) > -1) {
                 bout.write(buffer, 0, read);
                 ava += read;
                 long speed = ava / (System.currentTimeMillis() - start);
@@ -703,10 +708,7 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mLoadDataThread != null) {
-            mHandler.removeCallbacks(mLoadDataThread);
-            mLoadDataThread = null;
-        }
+        mLoadDataThread = null;
         if (adapter != null) {
             adapter.clear();
         }

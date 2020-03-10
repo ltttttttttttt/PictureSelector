@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
@@ -17,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
+import com.luck.picture.lib.config.PictureSelectionConfig;
 import com.yalantis.ucrop.callback.BitmapLoadCallback;
 import com.yalantis.ucrop.model.ExifInfo;
 import com.yalantis.ucrop.util.BitmapLoadUtils;
@@ -34,13 +34,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.net.URL;
+import java.util.concurrent.Executor;
 
 /**
  * Creates and returns a Bitmap for a given Uri(String url).
  * inSampleSize is calculated based on requiredWidth property. However can be adjusted if OOM occurs.
  * If any EXIF config is found - bitmap is transformed properly.
  */
-public class BitmapLoadTask extends AsyncTask<Void, Void, BitmapLoadTask.BitmapWorkerResult> {
+public class BitmapLoadTask
+        /*extends AsyncTask<Void, Void, BitmapLoadTask.BitmapWorkerResult>*/ //使用全局统一配置的子线程和handler
+{
 
     private static final String TAG = "BitmapWorkerTask";
 
@@ -51,6 +54,22 @@ public class BitmapLoadTask extends AsyncTask<Void, Void, BitmapLoadTask.BitmapW
     private final int mRequiredHeight;
 
     private final BitmapLoadCallback mBitmapLoadCallback;
+
+    //不改变api来实现
+    public void executeOnExecutor(Executor threadPoolExecutor) {
+        PictureSelectionConfig.resourcesConfig.runIoThread(new Runnable() {
+            @Override
+            public void run() {
+                final BitmapWorkerResult bitmapWorkerResult = doInBackground();
+                PictureSelectionConfig.resourcesConfig.runMainThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        onPostExecute(bitmapWorkerResult);
+                    }
+                });
+            }
+        });
+    }
 
     public static class BitmapWorkerResult {
 
@@ -85,9 +104,8 @@ public class BitmapLoadTask extends AsyncTask<Void, Void, BitmapLoadTask.BitmapW
         return mContextWeakReference.get();
     }
 
-    @Override
     @NonNull
-    protected BitmapWorkerResult doInBackground(Void... params) {
+    protected BitmapWorkerResult doInBackground() {
         if (mInputUri == null) {
             return new BitmapWorkerResult(new NullPointerException("Input Uri cannot be null"));
         }
@@ -261,7 +279,6 @@ public class BitmapLoadTask extends AsyncTask<Void, Void, BitmapLoadTask.BitmapW
         }
     }
 
-    @Override
     protected void onPostExecute(@NonNull BitmapWorkerResult result) {
         if (result.mBitmapWorkerException == null) {
             String inputUriString = mInputUri.toString();

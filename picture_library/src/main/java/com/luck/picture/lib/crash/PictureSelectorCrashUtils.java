@@ -7,7 +7,7 @@ import android.os.Environment;
 
 import androidx.annotation.NonNull;
 
-import com.luck.picture.lib.app.PictureAppMaster;
+import com.luck.picture.lib.config.PictureSelectionConfig;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -40,9 +40,9 @@ public class PictureSelectorCrashUtils {
 
     static {
         try {
-            PackageInfo pi = PictureAppMaster.getInstance().getAppContext()
+            PackageInfo pi = PictureSelectionConfig.application
                     .getPackageManager()
-                    .getPackageInfo(PictureAppMaster.getInstance().getAppContext().getPackageName(), 0);
+                    .getPackageInfo(PictureSelectionConfig.application.getPackageName(), 0);
             if (pi != null) {
                 versionName = pi.versionName;
                 versionCode = pi.versionCode;
@@ -153,10 +153,10 @@ public class PictureSelectorCrashUtils {
             return true;
         }
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
-                && PictureAppMaster.getInstance().getAppContext().getExternalCacheDir() != null) {
-            defaultDir = PictureAppMaster.getInstance().getAppContext().getExternalCacheDir() + FILE_SEP + "crash" + FILE_SEP;
+                && PictureSelectionConfig.application.getExternalCacheDir() != null) {
+            defaultDir = PictureSelectionConfig.application.getExternalCacheDir() + FILE_SEP + "crash" + FILE_SEP;
         } else {
-            defaultDir = PictureAppMaster.getInstance().getAppContext().getCacheDir() + FILE_SEP + "crash" + FILE_SEP;
+            defaultDir = PictureSelectionConfig.application.getCacheDir() + FILE_SEP + "crash" + FILE_SEP;
         }
         Thread.setDefaultUncaughtExceptionHandler(UNCAUGHT_EXCEPTION_HANDLER);
         return mInitialized = true;

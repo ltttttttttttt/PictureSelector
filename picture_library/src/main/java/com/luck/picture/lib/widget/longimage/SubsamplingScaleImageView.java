@@ -32,7 +32,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build.VERSION;
 import android.os.Handler;
 import android.os.Message;
@@ -52,15 +51,12 @@ import androidx.annotation.NonNull;
 import com.luck.picture.lib.R;
 
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.Executor;
 
 /**
  * Displays an image subsampled as necessary to avoid loading too much image data into memory. After a pinch to zoom in,
@@ -1483,7 +1479,7 @@ public class SubsamplingScaleImageView extends View {
     /**
      * Async task used to get image details without blocking the UI thread.
      */
-    private static class TilesInitTask extends AsyncTask<Void, Void, int[]> {
+    private static class TilesInitTask extends AsyncTask2 {
         private final WeakReference<SubsamplingScaleImageView> viewRef;
         private final WeakReference<Context> contextRef;
         private final WeakReference<DecoderFactory<? extends ImageRegionDecoder>> decoderFactoryRef;
@@ -1499,7 +1495,7 @@ public class SubsamplingScaleImageView extends View {
         }
 
         @Override
-        protected int[] doInBackground(Void... params) {
+        protected Object doInBackground(Object... params) {
             try {
                 String sourceUri = source.toString();
                 Context context = contextRef.get();
@@ -1526,7 +1522,8 @@ public class SubsamplingScaleImageView extends View {
         }
 
         @Override
-        protected void onPostExecute(int[] xyo) {
+        protected void onPostExecute(Object xyo2) {
+            int[] xyo= (int[]) xyo2;
             final SubsamplingScaleImageView view = viewRef.get();
             if (view != null) {
                 if (decoder != null && xyo != null && xyo.length == 3) {
@@ -1573,7 +1570,7 @@ public class SubsamplingScaleImageView extends View {
     /**
      * Async task used to load images without blocking the UI thread.
      */
-    private static class TileLoadTask extends AsyncTask<Void, Void, Bitmap> {
+    private static class TileLoadTask extends AsyncTask2 {
         private final WeakReference<SubsamplingScaleImageView> viewRef;
         private final WeakReference<ImageRegionDecoder> decoderRef;
         private final WeakReference<Tile> tileRef;
@@ -1587,7 +1584,7 @@ public class SubsamplingScaleImageView extends View {
         }
 
         @Override
-        protected Bitmap doInBackground(Void... params) {
+        protected Object doInBackground(Object... params) {
             try {
                 SubsamplingScaleImageView view = viewRef.get();
                 ImageRegionDecoder decoder = decoderRef.get();
@@ -1616,12 +1613,12 @@ public class SubsamplingScaleImageView extends View {
         }
 
         @Override
-        protected void onPostExecute(Bitmap bitmap) {
+        protected void onPostExecute(Object bitmap) {
             final SubsamplingScaleImageView subsamplingScaleImageView = viewRef.get();
             final Tile tile = tileRef.get();
             if (subsamplingScaleImageView != null && tile != null) {
                 if (bitmap != null) {
-                    tile.bitmap = bitmap;
+                    tile.bitmap = (Bitmap) bitmap;
                     tile.loading = false;
                     subsamplingScaleImageView.onTileLoaded();
                 } else if (exception != null && subsamplingScaleImageView.onImageEventListener != null) {
@@ -1655,7 +1652,7 @@ public class SubsamplingScaleImageView extends View {
     /**
      * Async task used to load bitmap without blocking the UI thread.
      */
-    private static class BitmapLoadTask extends AsyncTask<Void, Void, Integer> {
+    private static class BitmapLoadTask extends AsyncTask2 {
         private final WeakReference<SubsamplingScaleImageView> viewRef;
         private final WeakReference<Context> contextRef;
         private final WeakReference<DecoderFactory<? extends ImageDecoder>> decoderFactoryRef;
@@ -1673,7 +1670,7 @@ public class SubsamplingScaleImageView extends View {
         }
 
         @Override
-        protected Integer doInBackground(Void... params) {
+        protected Object doInBackground(Object... params) {
             try {
                 String sourceUri = source.toString();
                 Context context = contextRef.get();
@@ -1695,14 +1692,14 @@ public class SubsamplingScaleImageView extends View {
         }
 
         @Override
-        protected void onPostExecute(Integer orientation) {
+        protected void onPostExecute(Object orientation) {
             SubsamplingScaleImageView subsamplingScaleImageView = viewRef.get();
             if (subsamplingScaleImageView != null) {
                 if (bitmap != null && orientation != null) {
                     if (preview) {
                         subsamplingScaleImageView.onPreviewLoaded(bitmap);
                     } else {
-                        subsamplingScaleImageView.onImageLoaded(bitmap, orientation, false);
+                        subsamplingScaleImageView.onImageLoaded(bitmap,(int) orientation, false);
                     }
                 } else if (exception != null && subsamplingScaleImageView.onImageEventListener != null) {
                     if (preview) {
@@ -1818,17 +1815,9 @@ public class SubsamplingScaleImageView extends View {
         return exifOrientation;
     }
 
-    private void execute(AsyncTask<Void, Void, ?> asyncTask) {
-        if (parallelLoadingEnabled && VERSION.SDK_INT >= 11) {
-            try {
-                Field executorField = AsyncTask.class.getField("THREAD_POOL_EXECUTOR");
-                Executor executor = (Executor)executorField.get(null);
-                Method executeMethod = AsyncTask.class.getMethod("executeOnExecutor", Executor.class, Object[].class);
-                executeMethod.invoke(asyncTask, executor, null);
-                return;
-            } catch (Exception e) {
-                Log.i(TAG, "Failed to execute AsyncTask on thread pool executor, falling back to single threaded executor", e);
-            }
+    private void execute(AsyncTask2 asyncTask) {
+        if (parallelLoadingEnabled) {
+            asyncTask.executeOnExecutor();
         }
         asyncTask.execute();
     }

@@ -1,5 +1,6 @@
 package com.luck.picture.lib.config;
 
+import android.app.Application;
 import android.content.pm.ActivityInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -8,7 +9,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.StyleRes;
 
 import com.luck.picture.lib.R;
-import com.luck.picture.lib.engine.ImageEngine;
+import com.luck.picture.lib.engine.ResourcesConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
 import com.luck.picture.lib.listener.OnVideoSelectedPlayCallback;
@@ -97,7 +98,8 @@ public final class PictureSelectionConfig implements Parcelable {
     public boolean isNotPreviewDownload;
     public boolean isWithVideoImage;
     public UCropOptions uCropOptions;
-    public static ImageEngine imageEngine;
+    public static ResourcesConfig resourcesConfig;
+    public static Application application;
     public static OnResultCallbackListener listener;
     public static OnVideoSelectedPlayCallback customVideoPlayCallback;
     public List<LocalMedia> selectionMedias;
@@ -140,6 +142,14 @@ public final class PictureSelectionConfig implements Parcelable {
     public boolean isFallbackVersion;
     public boolean isFallbackVersion2;
     public boolean isFallbackVersion3;
+
+    /**
+     * 初始化库
+     */
+    public static void init(Application application, ResourcesConfig resourcesConfig) {
+        PictureSelectionConfig.application = application;
+        PictureSelectionConfig.resourcesConfig = resourcesConfig;
+    }
 
     protected void initDefaultValue() {
         chooseMode = PictureMimeType.ofImage();
@@ -211,7 +221,7 @@ public final class PictureSelectionConfig implements Parcelable {
         renameCompressFileName = "";
         renameCropFileName = "";
         selectionMedias = new ArrayList<>();
-        imageEngine = null;
+        resourcesConfig = null;
         listener = null;
         customVideoPlayCallback = null;
         uCropOptions = null;
