@@ -20,6 +20,9 @@ public class App extends Application implements IApp {
     public void onCreate() {
         super.onCreate();
 
+        //初始化图片选择库
+        PictureSelectionConfig.init(this, GlideEngine.createGlideEngine());
+
         /** PictureSelector日志管理配制开始 **/
         // PictureSelector 绑定监听用户获取全局上下文或其他...
         PictureAppMaster.getInstance().setApp(this);
@@ -29,9 +32,6 @@ public class App extends Application implements IApp {
 
         });
         /** PictureSelector日志管理配制结束 **/
-
-        //初始化图片选择库
-        PictureSelectionConfig.init(this, GlideEngine.createGlideEngine());
 
     }
 
