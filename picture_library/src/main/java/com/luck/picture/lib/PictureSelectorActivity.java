@@ -1,6 +1,7 @@
 package com.luck.picture.lib;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,7 +10,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.View;
@@ -555,6 +555,7 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
     /**
      * 完成选择
      */
+    @SuppressLint("StringFormatMatches")
     private void onComplete() {
         List<LocalMedia> result = mAdapter.getSelectedImages();
         int size = result.size();
@@ -768,12 +769,12 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
             mTvPlayPause = audioDialog.findViewById(R.id.tv_PlayPause);
             mTvStop = audioDialog.findViewById(R.id.tv_Stop);
             mTvQuit = audioDialog.findViewById(R.id.tv_Quit);
-                PictureSelectionConfig.resourcesConfig.runMainThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        initPlayer(path);
-                    }
-                }, 30);
+            PictureSelectionConfig.resourcesConfig.runMainThread(new Runnable() {
+                @Override
+                public void run() {
+                    initPlayer(path);
+                }
+            }, 30);
             mTvPlayPause.setOnClickListener(new audioOnClick(path));
             mTvStop.setOnClickListener(new audioOnClick(path));
             mTvQuit.setOnClickListener(new audioOnClick(path));
@@ -1691,6 +1692,10 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
             case PhotoItemSelectedDialog.VIDEO_CAMERA:
                 // 录视频
                 startOpenCameraVideo();
+                break;
+            case PhotoItemSelectedDialog.AUDIO_CAMERA:
+                // 录音
+                startOpenCameraAudio();
                 break;
             default:
                 break;

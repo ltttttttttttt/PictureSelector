@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_below="@id/picture_tv_photo"
-        android:background="@color/picture_color_e" />
+        android:background="@color/picture_color_d" />
 
     <TextView
         android:id="@+id/picture_tv_video"
@@ -36,14 +36,32 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_below="@id/picture_tv_video"
-        android:background="@color/picture_color_e" />
+        android:background="@color/picture_color_d" />
+
+    <TextView
+        android:id="@+id/picture_tv_audio"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_below="@id/video_line"
+        android:background="@drawable/picture_item_select_bg"
+        android:gravity="center"
+        android:text="@string/picture_tape"
+        android:textColor="@color/picture_color_53575e"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/audio_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@id/picture_tv_audio"
+        android:background="@color/picture_color_d" />
 
     <TextView
         android:id="@+id/bottom_line"
         android:layout_width="match_parent"
         android:layout_height="6dp"
-        android:layout_below="@id/video_line"
-        android:background="@color/picture_color_e" />
+        android:layout_below="@id/audio_line"
+        android:background="@color/picture_color_d" />
 
     <TextView
         android:id="@+id/picture_tv_cancel"

@@ -242,14 +242,17 @@ public class PictureImageGridAdapter extends RecyclerView.Adapter<RecyclerView.V
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
         View headerView;
         TextView tvCamera;
+        ImageView ivCamera;
 
         public HeaderViewHolder(View itemView) {
             super(itemView);
             headerView = itemView;
             tvCamera = itemView.findViewById(R.id.tvCamera);
-            String title = config.chooseMode == PictureMimeType.ofAudio() ?
-                    context.getString(R.string.picture_tape)
-                    : context.getString(R.string.picture_take_picture);
+            ivCamera = itemView.findViewById(R.id.ivCamera);
+            ivCamera.setImageResource(
+                    config.chooseMode == PictureMimeType.ofAudio() ? R.drawable.picture_sound_recording : R.drawable.picture_icon_camera
+            );
+            String title = config.chooseMode == PictureMimeType.ofAudio() ? context.getString(R.string.picture_tape) : context.getString(R.string.picture_take_picture);
             tvCamera.setText(title);
         }
     }

@@ -10,6 +10,8 @@
     <color name="picture_color_80">#80000000</color>
     <color name="picture_color_20">#20000000</color>
     <color name="picture_color_e">#EEEEEE</color>
+    <color name="picture_color_d">#DDDDDD</color>
+    <color name="picture_color_c">#CCCCCC</color>
     <color name="picture_color_fa">#FAFAFA</color>
     <color name="picture_color_fa632d">#FA632D</color>
     <color name="picture_color_9b">#9b9b9b</color>

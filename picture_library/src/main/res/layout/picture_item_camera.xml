@@ -3,16 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/picture_color_light_grey"
-    android:gravity="center_vertical"
-    android:orientation="vertical">
+    android:gravity="center_vertical">
+
+    <ImageView
+        android:layout_marginTop="8dp"
+        android:id="@+id/ivCamera"
+        android:src="@drawable/picture_icon_camera"
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_height="45dp" />
 
     <TextView
+        android:layout_marginTop="5dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/ivCamera"
         android:id="@+id/tvCamera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
-        android:drawableTop="@drawable/picture_icon_camera"
         android:gravity="center"
         android:text="@string/picture_take_picture"
         android:textColor="@color/picture_color_white"

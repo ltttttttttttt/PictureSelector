@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Android-PictureSelector.iml" filepath="$PROJECT_DIR$/Android-PictureSelector.iml" group="PictureSelector" />
+      <module fileurl="file://$PROJECT_DIR$/GitHubLtViews-PictureSelector.iml" filepath="$PROJECT_DIR$/GitHubLtViews-PictureSelector.iml" group="PictureSelector" />
+      <module fileurl="file://$PROJECT_DIR$/app/GitHubLtViews-PictureSelector-app.iml" filepath="$PROJECT_DIR$/app/GitHubLtViews-PictureSelector-app.iml" group="PictureSelector/app" />
+      <module fileurl="file://$PROJECT_DIR$/picture_library/GitHubLtViews-PictureSelector-picture_library.iml" filepath="$PROJECT_DIR$/picture_library/GitHubLtViews-PictureSelector-picture_library.iml" group="PictureSelector/picture_library" />
       <module fileurl="file://$PROJECT_DIR$/PictureSelector.iml" filepath="$PROJECT_DIR$/PictureSelector.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/PictureSelector-app.iml" filepath="$PROJECT_DIR$/app/PictureSelector-app.iml" group="PictureSelector/app" />
       <module fileurl="file://$PROJECT_DIR$/picture_library/PictureSelector-picture_library.iml" filepath="$PROJECT_DIR$/picture_library/PictureSelector-picture_library.iml" group="PictureSelector/picture_library" />

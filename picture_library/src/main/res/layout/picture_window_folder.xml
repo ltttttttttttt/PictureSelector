@@ -8,12 +8,14 @@
         android:id="@+id/folder_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/picture_color_80"
         android:scrollbars="none" />
 
     <View
         android:id="@+id/rootViewBg"
+        android:alpha="0.5"
         android:layout_width="match_parent"
-        android:layout_height="1000dp"
-        android:layout_below="@id/folder_list"
-        android:background="@color/picture_color_80" />
+        android:layout_height="30dp"
+        android:layout_alignBottom="@id/folder_list"
+        android:background="@drawable/picture_icon_shadow_bg" />
 </RelativeLayout>

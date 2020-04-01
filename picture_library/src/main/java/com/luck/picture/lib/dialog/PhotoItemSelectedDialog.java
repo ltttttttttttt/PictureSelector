@@ -27,7 +27,8 @@ import com.luck.picture.lib.tools.ScreenUtils;
 public class PhotoItemSelectedDialog extends DialogFragment implements View.OnClickListener {
     public static final int IMAGE_CAMERA = 0;
     public static final int VIDEO_CAMERA = 1;
-    private TextView tvPicturePhoto, tvPictureVideo, tvPictureCancel;
+    public static final int AUDIO_CAMERA = 2;
+    private TextView tvPicturePhoto, tvPictureVideo, tvPictureCancel, tvPictureAudio;
 
     public static PhotoItemSelectedDialog newInstance() {
         PhotoItemSelectedDialog selectedDialog = new PhotoItemSelectedDialog();
@@ -48,8 +49,10 @@ public class PhotoItemSelectedDialog extends DialogFragment implements View.OnCl
         super.onViewCreated(view, savedInstanceState);
         tvPicturePhoto = view.findViewById(R.id.picture_tv_photo);
         tvPictureVideo = view.findViewById(R.id.picture_tv_video);
+        tvPictureAudio = view.findViewById(R.id.picture_tv_audio);
         tvPictureCancel = view.findViewById(R.id.picture_tv_cancel);
         tvPictureVideo.setOnClickListener(this);
+        tvPictureAudio.setOnClickListener(this);
         tvPicturePhoto.setOnClickListener(this);
         tvPictureCancel.setOnClickListener(this);
     }
@@ -88,6 +91,9 @@ public class PhotoItemSelectedDialog extends DialogFragment implements View.OnCl
             }
             if (id == R.id.picture_tv_video) {
                 onItemClickListener.onItemClick(VIDEO_CAMERA);
+            }
+            if (id == R.id.picture_tv_audio) {
+                onItemClickListener.onItemClick(AUDIO_CAMERA);
             }
         }
 
