@@ -7,6 +7,10 @@ package com.luck.picture.lib.language;
  */
 public class LanguageConfig {
     /**
+     * 跟随app的语言
+     */
+    public static final int AUTO = 0;
+    /**
      * 简体中文
      */
     public static final int CHINESE = 0;
