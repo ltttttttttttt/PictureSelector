@@ -27,11 +27,16 @@
 
 ## 最新版本
 ```sh
-implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.4.6'
+maven { url 'https://jitpack.io' }
+implementation 'com.github.ltttttttttttt:PictureSelector:2.7.2'
+```
+
+## 初始化
+```
+PictureSelectionConfig.init(this, new ResourcesConfig());//初始化图片选择
 ```
 
 ## 启动相册
-快捷调用，更多功能 [请查看](https://github.com/LuckSiege/PictureSelector/wiki/PictureSelector-%E5%8A%9F%E8%83%BD%E9%85%8D%E5%88%B6%E9%A1%B9)
 ```sh
  PictureSelector.create(this)
    .openGallery(PictureMimeType.ofImage())
@@ -39,12 +44,101 @@ implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.4.6'
    .forResult(PictureConfig.CHOOSE_REQUEST);   
 ```
 
+更多功能
+```
+val builder = PictureSelector.create(activity)
+
+                            //主要可变更设置
+                            .openGallery(PictureMimeType.ofImage())//全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
+                    builder.queryMaxFileSize(10)// 只查多少M以内的图片、视频、音频  单位M
+                            //.setLanguage(LanguageConfig.CHINESE)// 设置语言，默认自动识别
+//                            .querySpecifiedFormatSuffix(PictureMimeType.ofPNG())// 查询指定后缀格式资源
+                            .isGif(false)// 是否显示gif图片 true or false
+//                            .selectionMedia()// 是否传入已选图片 List<LocalMedia> list
+                            .minimumCompressSize(30)// 小于100kb的图片不压缩
+                            .cutOutQuality(90)// 裁剪输出质量 默认100
+                            .videoQuality(1)// 视频录制质量 0 or 1 int
+                            .videoMaxSecond(60)// 显示多少秒以内的视频or音频也可适用 int
+                            .videoMinSecond(1)// 显示多少秒以上的视频or音频也可适用 int
+                            .recordVideoSecond(60)//视频最大秒数录制 默认60s int
+                            .theme(R.style.picture_WeChat_style)//主题样式(不设置为默认样式) 也可参考demo values/styles下 例如：R.style.picture.white.style
+                            .isSingleDirectReturn(false)// 单选模式下是否直接返回，PictureConfig.SINGLE模式下有效
+
+
+                            //次要可变更设置
+//                            .cropImageWideHigh()// 裁剪宽高值，设置如果大于图片本身宽高则无效
+                            .synOrAsy(false)//同步true或异步false 压缩 默认同步
+                            .compressSavePath(FileConfig.CACHE_DIR)//压缩图片和裁切图片保存地址
+                            .hideBottomControls(false)// 是否显示uCrop工具栏，默认不显示 true or false
+                            .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)// 设置相册Activity方向，不设置默认使用系统,之前用的 ActivityInfo.SCREEN_ORIENTATION_PORTRAIT as3.6报错,所以改了一下
+//                            .cameraFileName("test.png") // 重命名拍照文件名、注意这个只在使用相机时可以使用
+//                            .renameCompressFile("test.png")// 重命名压缩文件名、 注意这个不要重复，只适用于单张图压缩使用
+//                            .renameCropFileName("test.png")// 重命名裁剪文件名、 注意这个不要重复，只适用于单张图裁剪使用
+//                            .imageFormat(PictureMimeType.PNG)// 拍照保存图片格式后缀,默认jpeg
+                            .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
+                            .sizeMultiplier(0.5f)// glide 加载图片大小 0~1之间 如设置 .glideOverride()无效
+                            .circleDimmedLayer(false)// 是否圆形裁剪 true or false
+                            .freeStyleCropEnabled(true)// 裁剪框是否可拖拽 true or false
+                            .showCropFrame(true)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false   true or false
+                            .showCropGrid(true)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false    true or false
+                            .openClickSound(false)// 是否开启点击声音 true or false
+                            .previewEggs(false)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中) true or false  true有bug,但是false的效果正好,所以不改了
+                            .rotateEnabled(true) // 裁剪是否可旋转图片 true or false
+                            .scaleEnabled(true)// 裁剪是否可放大缩小图片 true or false
+                            .isDragFrame(true)// 是否可拖动裁剪框(固定)
+//                            .bindCustomPlayVideoCallback(callback)// 自定义播放回调控制，用户可以使用自己的视频播放界面
+
+
+                            //一般不变设置
+                            .compress(isCompress)// 是否压缩 true or false
+                            .enableCrop(isCorp)// 是否裁剪 true or false
+//                            .setPictureStyle()// 动态自定义相册主题  注意：此方法最好不要与.theme();同时存在， 二选一
+//                            .setPictureCropStyle()// 动态自定义裁剪主题
+                            .setPictureWindowAnimationStyle(PictureWindowAnimationStyle(R.anim.in_from_bottom, R.anim.out_to_bottom))// 自定义相册启动退出动画
+//                            .loadImageEngine(PictureResourcesConfig())// 外部传入图片加载引擎，必传项   现在再初始化时设置了,所以不需要在设置
+                            .isWithVideoImage(true)// 图片和视频是否可以同选,只在ofAll模式下有效
+//                            .isUseCustomCamera(false)// 是否使用自定义相机，5.0以下请不要使用，可能会出现兼容性问题,被弃用
+                            .isOriginalImageControl(false)// 是否显示原图控制按钮，如果用户勾选了 压缩、裁剪功能将会失效
+                            .isWeChatStyle(true)// 是否开启微信图片选择风格，此开关开启了才可使用微信主题！！！
+                            .isAndroidQTransform(false)// 是否需要处理Android Q 拷贝至应用沙盒的操作，只针对compress(false); && enableCrop(false);有效
+                            .isMultipleSkipCrop(true)// 多图裁剪时是否支持跳过，默认支持
+                            .isMultipleRecyclerAnimation(true)// 多图裁剪底部列表显示动画效果
+                            .maxSelectNum(num)// 最大图片选择数量 int
+                            .minSelectNum(1)// 最小选择数量 int
+                            .minVideoSelectNum(1)// 视频最小选择数量，如果没有单独设置的需求则可以不设置，同用minSelectNum字段
+                            .maxVideoSelectNum(num) // 视频最大选择数量，如果没有单独设置的需求则可以不设置，同用maxSelectNum字段
+                            .imageSpanCount(4)// 每行显示个数 int
+                            .isReturnEmpty(false)// 未选择数据时点击按钮是否可以返回
+                            .isNotPreviewDownload(true)// 预览图片长按是否可以下载
+//                            .setTitleBarBackgroundColor()//相册标题栏背景色
+//                            .isChangeStatusBarFontColor()// 是否关闭白色状态栏字体颜色
+//                            .setStatusBarColorPrimaryDark()// 状态栏背景色
+//                            .setUpArrowDrawable()// 设置标题栏右侧箭头图标
+//                            .setDownArrowDrawable()// 设置标题栏右侧箭头图标
+//                            .isOpenStyleCheckNumMode()// 是否开启数字选择模式 类似QQ相册
+                            .selectionMode(if (num == 1) PictureConfig.SINGLE else PictureConfig.MULTIPLE)// 多选 or 单选 PictureConfig.MULTIPLE or PictureConfig.SINGLE
+                            .previewImage(true)// 是否可预览图片 true or false
+                            .previewVideo(true)// 是否可预览视频 true or false
+                            .enablePreviewAudio(true) // 是否可播放音频 true or false
+//                            .setCircleDimmedColor()// 设置圆形裁剪背景色值
+//                            .setCircleDimmedBorderColor()// 设置圆形裁剪边框色值
+//                            .setCircleStrokeWidth(3)// 设置圆形裁剪边框粗细
+//                            .glideOverride()// int glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
+                    if (corpRatio != null) {
+                        builder.withAspectRatio(corpRatio.first, corpRatio.last)// int 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
+                    }
+                    builder.isCamera(isShowCamera)// 是否显示拍照按钮 true or false
+//                            .cropCompressQuality(90)// 废弃 改用cutOutQuality()
+                            .forResult(188)//结果回调onActivityResult code
+                    //.forResult(OnResultCallbackListener listener);//Callback回调方式
+                    //.forIntent(activity);//返回intent,自行调用startActivityForResult
+```
+
 ## 单独拍照
 快捷调用，单独启动拍照或视频 根据PictureMimeType自动识别 更多功能 [请查看](https://github.com/LuckSiege/PictureSelector/wiki/PictureSelector-%E5%8A%9F%E8%83%BD%E9%85%8D%E5%88%B6%E9%A1%B9)
 ```sh
  PictureSelector.create(this)
    .openCamera(PictureMimeType.ofImage())
-   .loadImageEngine(GlideEngine.createGlideEngine()) // 请参考Demo GlideEngine.java
    .forResult(PictureConfig.REQUEST_CAMERA);   
 ```
 
@@ -61,16 +155,23 @@ implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.4.6'
 // 预览图片 可自定长按保存路径
 *注意 .themeStyle(R.style.theme)；里面的参数不可删，否则闪退...
 
-PictureSelector.create(this)
- .themeStyle(R.style.picture_default_style)
- .isNotPreviewDownload(true)
- .loadImageEngine(GlideEngine.createGlideEngine()) // 请参考Demo GlideEngine.java
- .openExternalPreview(position, selectList);
-
+PictureSelector.create(AppManager.currentActivity())
+                .themeStyle(R.style.picture_WeChat_style)
+                .isWeChatStyle(true)
+                .isNotPreviewDownload(true)
+                .openExternalPreview(position, selectList)
 ```
+
 ## 预览视频
 ```sh
-PictureSelector.create(this).externalPictureVideo(video_path);
+PictureSelector.create(AppManager.currentActivity()).externalPictureVideo(videoPath)
+```
+
+## 预览音频
+```
+PictureSelector.create(AppManager.currentActivity())
+                .externalPictureAudio(audioPath, true)
+                ?.setLoop(false)//是否循环播放
 ```
 
 ## 项目使用第三方库：

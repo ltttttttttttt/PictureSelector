@@ -92,6 +92,12 @@ public interface ResourcesConfig {
      */
     void runMainThread(@NonNull Runnable runnable);
 
+    /**
+     * 发送定时任务到主线程
+     *
+     * @param runnable
+     * @param time
+     */
     void runMainThread(@NonNull Runnable runnable, long time);
 
     /**

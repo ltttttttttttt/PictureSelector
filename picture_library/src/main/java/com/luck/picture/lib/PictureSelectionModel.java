@@ -1034,6 +1034,22 @@ public class PictureSelectionModel {
     }
 
     /**
+     * 返回intent,自行调用startActivityForResult
+     */
+    public Intent forIntent(Activity activity) {
+        Intent intent = new Intent(activity, selectionConfig.camera
+                ? PictureSelectorCameraEmptyActivity.class :
+                selectionConfig.isWeChatStyle ? PictureSelectorWeChatStyleActivity.class
+                        : PictureSelectorActivity.class);
+        PictureWindowAnimationStyle windowAnimationStyle = selectionConfig.windowAnimationStyle;
+        activity.overridePendingTransition(windowAnimationStyle != null &&
+                windowAnimationStyle.activityEnterAnimation != 0 ?
+                windowAnimationStyle.activityEnterAnimation :
+                R.anim.picture_anim_enter, R.anim.picture_anim_fade_in);
+        return intent;
+    }
+
+    /**
      * 提供外部预览图片方法
      *
      * @param position
