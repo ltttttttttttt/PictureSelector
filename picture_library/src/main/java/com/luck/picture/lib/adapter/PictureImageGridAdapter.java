@@ -2,6 +2,7 @@ package com.luck.picture.lib.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Build;
@@ -28,6 +29,7 @@ import com.luck.picture.lib.tools.PictureFileUtils;
 import com.luck.picture.lib.tools.SdkVersionUtils;
 import com.luck.picture.lib.tools.StringUtils;
 import com.luck.picture.lib.tools.ToastUtils;
+import com.luck.picture.lib.tools.VideoUtils;
 import com.luck.picture.lib.tools.VoiceUtils;
 
 import java.io.File;
@@ -152,7 +154,18 @@ public class PictureImageGridAdapter extends RecyclerView.Adapter<RecyclerView.V
             boolean eqAudio = PictureMimeType.eqAudio(mimeType);
             if (eqVideo || eqAudio) {
                 contentHolder.tvDuration.setVisibility(View.VISIBLE);
-                contentHolder.tvDuration.setText(DateUtils.formatDurationTime(image.getDuration()));
+                //如果是音频,还需要显示文件名
+                if (eqAudio) {
+                    //去掉后缀名
+                    String fileName = image.getFileName();
+                    int index = fileName.lastIndexOf('.');
+                    if (index > 0) {
+                        fileName = fileName.substring(0, index);
+                    }
+                    contentHolder.tvDuration.setText(fileName + " " + DateUtils.formatDurationTime(image.getDuration()));
+                } else {
+                    contentHolder.tvDuration.setText(DateUtils.formatDurationTime(image.getDuration()));
+                }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                     contentHolder.tvDuration.setCompoundDrawablesRelativeWithIntrinsicBounds
                             (eqVideo ? R.drawable.picture_icon_video : R.drawable.picture_icon_audio,
@@ -162,7 +175,12 @@ public class PictureImageGridAdapter extends RecyclerView.Adapter<RecyclerView.V
                 contentHolder.tvDuration.setVisibility(View.GONE);
             }
             if (config.chooseMode == PictureMimeType.ofAudio()) {
-                contentHolder.ivPicture.setImageResource(R.drawable.picture_audio_placeholder);
+                //如果是音频,先获取专辑图,如果获取不到就使用默认音乐图
+                Bitmap albumArt = VideoUtils.getArtwork(context, path);
+                if (albumArt == null)
+                    contentHolder.ivPicture.setImageResource(R.drawable.picture_audio_placeholder);
+                else
+                    contentHolder.ivPicture.setImageBitmap(albumArt);
             } else {
                 if (config.resourcesConfig != null) {
                     config.resourcesConfig.loadGridImage(context, path, contentHolder.ivPicture);

@@ -1,6 +1,7 @@
 package com.luck.pictureselector.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
@@ -17,6 +18,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.tools.DateUtils;
+import com.luck.picture.lib.tools.VideoUtils;
 import com.luck.pictureselector.R;
 import com.luck.pictureselector.listener.OnItemClickListener;
 import com.luck.pictureselector.listener.OnItemLongClickListener;
@@ -206,7 +208,11 @@ public class GridImageAdapter extends
             }
             viewHolder.tvDuration.setText(DateUtils.formatDurationTime(duration));
             if (chooseModel == PictureMimeType.ofAudio()) {
-                viewHolder.mImg.setImageResource(R.drawable.picture_audio_placeholder);
+                Bitmap albumArt = VideoUtils.getArtwork(viewHolder.itemView.getContext(), path);
+                if (albumArt == null)
+                    viewHolder.mImg.setImageResource(com.luck.picture.lib.R.drawable.picture_audio_placeholder);
+                else
+                    viewHolder.mImg.setImageBitmap(albumArt);
             } else {
 
                 Glide.with(viewHolder.itemView.getContext())
