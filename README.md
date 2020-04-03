@@ -33,14 +33,13 @@ implementation 'com.github.ltttttttttttt:PictureSelector:2.7.2'
 
 ## 初始化
 ```
-PictureSelectionConfig.init(this, new ResourcesConfig());//初始化图片选择
+PictureSelectionConfig.init(this, new ResourcesConfig());//初始化图片选择,ResourcesConfig参考GlideEngine.java
 ```
 
 ## 启动相册
 ```sh
  PictureSelector.create(this)
    .openGallery(PictureMimeType.ofImage())
-   .loadImageEngine(GlideEngine.createGlideEngine()) // 请参考Demo GlideEngine.java
    .forResult(PictureConfig.CHOOSE_REQUEST);   
 ```
 
