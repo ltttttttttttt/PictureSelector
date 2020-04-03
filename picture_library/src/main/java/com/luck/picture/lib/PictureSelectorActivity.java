@@ -389,7 +389,6 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
             mediaLoader = new LocalMediaLoader(this, config);
         }
         showPleaseDialog();
-        mediaLoader.loadAllMedia();
         mediaLoader.setCompleteListener(new LocalMediaLoader.LocalMediaLoadListener() {
             @Override
             public void loadComplete(List<LocalMediaFolder> folders) {
@@ -454,6 +453,7 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
                 mTvEmpty.setVisibility(images.size() > 0 ? View.INVISIBLE : View.VISIBLE);
             }
         });
+        mediaLoader.loadAllMedia();
     }
 
     /**

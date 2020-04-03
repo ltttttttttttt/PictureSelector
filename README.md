@@ -132,6 +132,7 @@ val builder = PictureSelector.create(activity)
                             .forResult(188)//结果回调onActivityResult code
                     //.forResult(OnResultCallbackListener listener);//Callback回调方式
                     //.forIntent(activity);//返回intent,自行调用startActivityForResult
+                    //.getMetaData(context, LocalMediaLoader.LocalMediaLoadListener);//直接异步获取数据,需要自行申请存储权限
 ```
 
 ## 单独拍照

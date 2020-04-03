@@ -14,15 +14,15 @@ import java.util.List;
 
 public class LocalMediaFolder implements Parcelable {
     /**
-     * Folder name
+     * 文件夹名字
      */
     private String name;
     /**
-     * Folder first path
+     * 该文件夹内第一个媒体的名称
      */
     private String firstImagePath;
     /**
-     * Folder media num
+     * 媒体数量
      */
     private int imageNum;
     /**
@@ -36,13 +36,20 @@ public class LocalMediaFolder implements Parcelable {
 
     /**
      * type
+     * TYPE_ALL = 0;
+     * TYPE_IMAGE = 1
+     * TYPE_VIDEO = 2
+     * TYPE_AUDIO = 3
      */
     private int ofAllType = -1;
     /**
-     * Whether or not the camera
+     * Whether or not the camera ,是否相机文件夹?
      */
     private boolean isCameraFolder;
 
+    /**
+     * 媒体文件集合
+     */
     private List<LocalMedia> images = new ArrayList<LocalMedia>();
 
     public boolean isChecked() {

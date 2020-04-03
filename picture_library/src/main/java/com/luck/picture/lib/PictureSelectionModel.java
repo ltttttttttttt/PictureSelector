@@ -1,6 +1,7 @@
 package com.luck.picture.lib;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 
 import androidx.annotation.ColorInt;
@@ -17,6 +18,7 @@ import com.luck.picture.lib.engine.ResourcesConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
 import com.luck.picture.lib.listener.OnVideoSelectedPlayCallback;
+import com.luck.picture.lib.model.LocalMediaLoader;
 import com.luck.picture.lib.style.PictureCropParameterStyle;
 import com.luck.picture.lib.style.PictureParameterStyle;
 import com.luck.picture.lib.style.PictureWindowAnimationStyle;
@@ -1047,6 +1049,15 @@ public class PictureSelectionModel {
                 windowAnimationStyle.activityEnterAnimation :
                 R.anim.picture_anim_enter, R.anim.picture_anim_fade_in);
         return intent;
+    }
+
+    /**
+     * 直接异步获取数据,需要自行申请存储权限
+     */
+    public void getMetaData(Context context, LocalMediaLoader.LocalMediaLoadListener listener) {
+        LocalMediaLoader localMediaLoader = new LocalMediaLoader(context, selectionConfig);
+        localMediaLoader.setCompleteListener(listener);
+        localMediaLoader.loadAllMedia();
     }
 
     /**

@@ -16,7 +16,7 @@ public class LocalMedia implements Parcelable {
      */
     private long id;
     /**
-     * original path
+     * 原文件路径
      */
     private String path;
 
@@ -49,7 +49,7 @@ public class LocalMedia implements Parcelable {
      */
     private String androidQToPath;
     /**
-     * video duration
+     * 音视频持续时间
      */
     private long duration;
     /**
@@ -75,6 +75,10 @@ public class LocalMedia implements Parcelable {
 
     /**
      * Gallery selection mode
+     * TYPE_ALL = 0;
+     * TYPE_IMAGE = 1
+     * TYPE_VIDEO = 2
+     * TYPE_AUDIO = 3
      */
     private int chooseModel;
 
@@ -83,16 +87,16 @@ public class LocalMedia implements Parcelable {
      */
     private boolean compressed;
     /**
-     * image or video width
+     * 图片或视频宽
      */
     private int width;
     /**
-     * image or video height
+     * 图片或视频高
      */
     private int height;
 
     /**
-     * file size
+     * 文件大小
      */
     private long size;
 
@@ -102,7 +106,7 @@ public class LocalMedia implements Parcelable {
     private boolean isOriginal;
 
     /**
-     * file name
+     * 文件名
      */
     private String fileName;
 
