@@ -12,7 +12,7 @@ import android.net.Uri;
  * effect : 音频处理工具
  * warning:
  */
-public class VideoUtils {
+public class AudioUtils {
     /**
      * 获取专辑图,id暂不知道怎么获取
      * @param context
@@ -39,9 +39,7 @@ public class VideoUtils {
      * @return
      */
     public static Bitmap getArtwork(Context context, String url) {
-        Uri selectedAudio = Uri.parse(url);
-        MediaMetadataRetriever myRetriever = new MediaMetadataRetriever();
-        myRetriever.setDataSource(context, selectedAudio); // the URI of audio file
+        MediaMetadataRetriever myRetriever = getMediaMetadataRetriever(context, url);
         byte[] artwork;
 
         artwork = myRetriever.getEmbeddedPicture();
@@ -51,4 +49,21 @@ public class VideoUtils {
         }
         return null;
     }
+
+    /**
+     * 获取音频名称
+     */
+    public static String getAudioName(Context context, String url) {
+        return getMediaMetadataRetriever(context, url)
+                .extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+    }
+
+
+    public static MediaMetadataRetriever getMediaMetadataRetriever(Context context, String url) {
+        Uri selectedAudio = Uri.parse(url);
+        MediaMetadataRetriever myRetriever = new MediaMetadataRetriever();
+        myRetriever.setDataSource(context, selectedAudio); // the URI of audio file
+        return myRetriever;
+    }
+
 }

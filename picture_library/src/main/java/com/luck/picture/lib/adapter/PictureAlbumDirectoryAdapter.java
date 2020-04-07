@@ -15,7 +15,7 @@ import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.config.PictureSelectionConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.entity.LocalMediaFolder;
-import com.luck.picture.lib.tools.VideoUtils;
+import com.luck.picture.lib.tools.AudioUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +67,7 @@ public class PictureAlbumDirectoryAdapter extends RecyclerView.Adapter<PictureAl
         holder.tvSign.setVisibility(checkedNum > 0 ? View.VISIBLE : View.INVISIBLE);
         holder.itemView.setSelected(isChecked);
         if (chooseMode == PictureMimeType.ofAudio()) {
-            Bitmap albumArt = VideoUtils.getArtwork(holder.ivFirstImage.getContext(), imagePath);
+            Bitmap albumArt = AudioUtils.getArtwork(holder.ivFirstImage.getContext(), imagePath);
             if (albumArt == null)
                 holder.ivFirstImage.setImageResource(R.drawable.picture_audio_placeholder);
             else

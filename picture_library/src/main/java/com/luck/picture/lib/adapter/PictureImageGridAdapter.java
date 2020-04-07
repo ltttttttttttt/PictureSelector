@@ -23,13 +23,13 @@ import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.config.PictureSelectionConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.tools.AnimUtils;
+import com.luck.picture.lib.tools.AudioUtils;
 import com.luck.picture.lib.tools.DateUtils;
 import com.luck.picture.lib.tools.MediaUtils;
 import com.luck.picture.lib.tools.PictureFileUtils;
 import com.luck.picture.lib.tools.SdkVersionUtils;
 import com.luck.picture.lib.tools.StringUtils;
 import com.luck.picture.lib.tools.ToastUtils;
-import com.luck.picture.lib.tools.VideoUtils;
 import com.luck.picture.lib.tools.VoiceUtils;
 
 import java.io.File;
@@ -156,13 +156,16 @@ public class PictureImageGridAdapter extends RecyclerView.Adapter<RecyclerView.V
                 contentHolder.tvDuration.setVisibility(View.VISIBLE);
                 //如果是音频,还需要显示文件名
                 if (eqAudio) {
-                    //去掉后缀名
-                    String fileName = image.getFileName();
-                    int index = fileName.lastIndexOf('.');
-                    if (index > 0) {
-                        fileName = fileName.substring(0, index);
+                    String name = AudioUtils.getAudioName(context, image.getPath());
+                    if (TextUtils.isEmpty(name)) {
+                        //去掉后缀名
+                        name = image.getFileName();
+                        int index = name.lastIndexOf('.');
+                        if (index > 0) {
+                            name = name.substring(0, index);
+                        }
                     }
-                    contentHolder.tvDuration.setText(fileName + " " + DateUtils.formatDurationTime(image.getDuration()));
+                    contentHolder.tvDuration.setText(name + " " + DateUtils.formatDurationTime(image.getDuration()));
                 } else {
                     contentHolder.tvDuration.setText(DateUtils.formatDurationTime(image.getDuration()));
                 }
@@ -176,7 +179,7 @@ public class PictureImageGridAdapter extends RecyclerView.Adapter<RecyclerView.V
             }
             if (config.chooseMode == PictureMimeType.ofAudio()) {
                 //如果是音频,先获取专辑图,如果获取不到就使用默认音乐图
-                Bitmap albumArt = VideoUtils.getArtwork(context, path);
+                Bitmap albumArt = AudioUtils.getArtwork(context, path);
                 if (albumArt == null)
                     contentHolder.ivPicture.setImageResource(R.drawable.picture_audio_placeholder);
                 else
