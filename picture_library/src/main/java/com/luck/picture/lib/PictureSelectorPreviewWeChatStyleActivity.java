@@ -67,7 +67,7 @@ public class PictureSelectorPreviewWeChatStyleActivity extends PicturePreviewAct
             @Override
             public void onItemClick(int position, LocalMedia media, View v) {
                 if (viewPager != null && media != null) {
-                    int newPosition = is_bottom_preview ? position : media.position - 1;
+                    int newPosition = is_bottom_preview ? position : media.position - (config.isCamera ? 1 : 0);
                     viewPager.setCurrentItem(newPosition);
                 }
             }
@@ -80,7 +80,7 @@ public class PictureSelectorPreviewWeChatStyleActivity extends PicturePreviewAct
             int size = selectImages != null ? selectImages.size() : 0;
             for (int i = 0; i < size; i++) {
                 LocalMedia media = selectImages.get(i);
-                media.setChecked(media.position - 1 == position);
+                media.setChecked(media.position - (config.isCamera ? 1 : 0) == position);
             }
         }
     }
