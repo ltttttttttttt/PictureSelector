@@ -601,7 +601,15 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
                 bout = new BufferedOutputStream(getContentResolver().openOutputStream(outImageUri));
                 path = PictureFileUtils.getPath(this, outImageUri);
             } else {
-                String suffix = PictureMimeType.getLastImgSuffix(mMimeType);
+                String suffix;
+                if (urlPath != null
+                        && urlPath.length() > 6
+                        && (urlPath.startsWith("http://") || urlPath.startsWith("https://"))
+                        && urlPath.substring(urlPath.length() - 5).indexOf('.') < 0) {//如果是网络图片并且没有后缀名
+                    suffix = ".jpg";
+                } else {
+                    suffix = PictureMimeType.getLastImgSuffix(mMimeType);
+                }
                 String state = Environment.getExternalStorageState();
                 File rootDir =
                         state.equals(Environment.MEDIA_MOUNTED)
