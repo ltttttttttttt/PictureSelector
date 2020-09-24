@@ -183,14 +183,13 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
                 BroadcastManager.getInstance(getContext())
                         .action(BroadcastAction.ACTION_DELETE_PREVIEW_POSITION)
                         .extras(bundle).broadcast();
-                if (images.size() == 0) {
-                    onBackPressed();
-                    return;
-                }
                 tvTitle.setText(getString(R.string.picture_preview_image_num,
                         position + 1, images.size()));
                 position = currentItem;
                 adapter.notifyDataSetChanged();
+                if (images.size() == 0) {
+                    onBackPressed();
+                }
             }
         }
     }
