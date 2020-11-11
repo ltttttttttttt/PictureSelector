@@ -22,6 +22,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name=".PictureSelectorWeChatStyleActivity"
+            android:theme="@style/Base.Theme.NoActionBar"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name=".PictureSelectorCameraEmptyActivity"
