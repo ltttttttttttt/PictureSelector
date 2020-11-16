@@ -51,4 +51,13 @@ public class PreviewViewPager extends ViewPager {
         }
         return false;
     }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        try {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
