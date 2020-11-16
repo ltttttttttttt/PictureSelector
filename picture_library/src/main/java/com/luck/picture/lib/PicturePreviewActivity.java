@@ -837,6 +837,7 @@ public class PicturePreviewActivity extends PictureBaseActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        adapter.notifyDataSetChanged();
         if (!isOnSaveInstanceState) {
             ImagesObservable.getInstance().clearPreviewMediaData();
         }
