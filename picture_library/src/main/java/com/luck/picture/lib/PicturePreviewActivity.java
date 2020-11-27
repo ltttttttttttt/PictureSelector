@@ -82,6 +82,7 @@ public class PicturePreviewActivity extends PictureBaseActivity implements
         if (savedInstanceState != null) {
             // 防止内存不足时activity被回收，导致图片未选中
             selectImages = PictureSelector.obtainSelectorList(savedInstanceState);
+            notifyVP();
             isCompleteOrSelected = savedInstanceState.getBoolean(PictureConfig.EXTRA_COMPLETE_SELECTED, false);
             isChangeSelectedData = savedInstanceState.getBoolean(PictureConfig.EXTRA_CHANGE_SELECTED_DATA, false);
             onImageChecked(position);
@@ -116,10 +117,11 @@ public class PicturePreviewActivity extends PictureBaseActivity implements
         btnCheck.setOnClickListener(this);
         selectImages = getIntent().
                 getParcelableArrayListExtra(PictureConfig.EXTRA_SELECT_LIST);
+        notifyVP();
         is_bottom_preview = getIntent().
                 getBooleanExtra(PictureConfig.EXTRA_BOTTOM_PREVIEW, false);
         // 底部预览按钮过来
-        images =(List<LocalMedia>)( is_bottom_preview ? getIntent().
+        images = (List<LocalMedia>) (is_bottom_preview ? getIntent().
                 getParcelableArrayListExtra(PictureConfig.EXTRA_PREVIEW_SELECT_LIST)
                 : ImagesObservable.getInstance().readPreviewMediaData());
         initViewPageAdapterData();
@@ -220,6 +222,10 @@ public class PicturePreviewActivity extends PictureBaseActivity implements
      * @param media
      */
     protected void onPageSelectedChange(LocalMedia media) {
+
+    }
+
+    protected void notifyVP() {
 
     }
 
@@ -570,11 +576,13 @@ public class PicturePreviewActivity extends PictureBaseActivity implements
                 // 如果是单选，则清空已选中的并刷新列表(作单一选择)
                 if (config.selectionMode == PictureConfig.SINGLE) {
                     selectImages.clear();
+                    notifyVP();
                 }
                 if (!TextUtils.isEmpty(image.getRealPath()) && image.getPath().startsWith("content://")) {
                     image.setRealPath(PictureFileUtils.getPath(getContext(), Uri.parse(image.getPath())));
                 }
                 selectImages.add(image);
+                notifyVP();
                 onSelectedChange(true, image);
                 image.setNum(selectImages.size());
                 if (config.checkNumMode) {
@@ -587,6 +595,7 @@ public class PicturePreviewActivity extends PictureBaseActivity implements
                     if (media.getPath().equals(image.getPath())
                             || media.getId() == image.getId()) {
                         selectImages.remove(media);
+                        notifyVP();
                         onSelectedChange(false, image);
                         subSelectPosition();
                         notifyCheckChanged(media);
@@ -837,7 +846,6 @@ public class PicturePreviewActivity extends PictureBaseActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        adapter.notifyDataSetChanged();
         if (!isOnSaveInstanceState) {
             ImagesObservable.getInstance().clearPreviewMediaData();
         }

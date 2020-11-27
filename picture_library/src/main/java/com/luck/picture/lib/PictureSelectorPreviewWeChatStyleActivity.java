@@ -315,4 +315,11 @@ public class PictureSelectorPreviewWeChatStyleActivity extends PicturePreviewAct
             }
         }
     }
+
+    @Override
+    protected void notifyVP() {
+        if (!isFinishing() && viewPager != null && mGalleryAdapter != null) {
+            mGalleryAdapter.notifyDataSetChanged();
+        }
+    }
 }

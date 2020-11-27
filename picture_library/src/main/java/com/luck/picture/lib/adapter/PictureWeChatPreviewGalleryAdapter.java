@@ -38,6 +38,7 @@ public class PictureWeChatPreviewGalleryAdapter
     public void addSingleMediaToData(LocalMedia media) {
         if (this.list != null) {
             list.clear();
+            notifyDataSetChanged();
             list.add(media);
             notifyDataSetChanged();
         }
