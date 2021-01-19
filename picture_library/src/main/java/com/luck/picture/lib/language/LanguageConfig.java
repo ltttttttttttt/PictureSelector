@@ -18,33 +18,33 @@ public class LanguageConfig {
      * 繁体
      */
     public static final int TRADITIONAL_CHINESE = 1;
-
-    // 英语
+    /**
+     * 英语
+     */
     public static final int ENGLISH = 2;
-
     /**
      * 韩语
      */
     public static final int KOREA = 3;
-
     /**
      * 德语
      */
     public static final int GERMANY = 4;
-
     /**
      * 法语
      */
     public static final int FRANCE = 5;
-
     /**
      * 日语
      */
     public static final int JAPAN = 6;
-
     /**
      * 越语
      */
     public static final int VIETNAM = 7;
+    /**
+     * 阿拉伯语
+     */
+    public static final int ARABIC = 8;
 
 }

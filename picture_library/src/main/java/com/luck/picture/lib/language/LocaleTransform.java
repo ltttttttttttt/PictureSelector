@@ -38,6 +38,9 @@ public class LocaleTransform {
             case LanguageConfig.CHINESE:
                 // 简体中文
                 return Locale.CHINESE;
+            case LanguageConfig.ARABIC:
+                // 阿拉伯语
+                return new Locale("ar");
             default:
                 // 自动使用app内的语言
                 return getAppLocale();
