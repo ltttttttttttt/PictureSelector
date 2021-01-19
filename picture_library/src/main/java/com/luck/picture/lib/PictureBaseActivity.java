@@ -19,8 +19,8 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
+import com.luck.picture.lib.base.BaseActivity;
 import com.luck.picture.lib.compress.Luban;
 import com.luck.picture.lib.compress.OnCompressListener;
 import com.luck.picture.lib.config.PictureConfig;
@@ -54,7 +54,7 @@ import java.util.List;
  * @data：2018/3/28 下午1:00
  * @描述: Activity基类
  */
-public abstract class PictureBaseActivity extends AppCompatActivity implements Handler.Callback {
+public abstract class PictureBaseActivity extends BaseActivity implements Handler.Callback {
     private static final int MSG_CHOOSE_RESULT_SUCCESS = 200;
     private static final int MSG_ASY_COMPRESSION_RESULT_SUCCESS = 300;
     protected PictureSelectionConfig config;

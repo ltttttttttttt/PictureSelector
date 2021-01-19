@@ -272,12 +272,12 @@ public class OverlayView extends View {
         if (height > mThisHeight) {
             int width = (int) (mThisHeight * mTargetAspectRatio);
             int halfDiff = (mThisWidth - width) / 2;
-            mCropViewRect.set(getPaddingLeft() + halfDiff, getPaddingTop(),
-                    getPaddingLeft() + width + halfDiff, getPaddingTop() + mThisHeight);
+            mCropViewRect.set(getPaddingStart() + halfDiff, getPaddingTop(),
+                    getPaddingStart() + width + halfDiff, getPaddingTop() + mThisHeight);
         } else {
             int halfDiff = (mThisHeight - height) / 2;
-            mCropViewRect.set(getPaddingLeft(), getPaddingTop() + halfDiff,
-                    getPaddingLeft() + mThisWidth, getPaddingTop() + height + halfDiff);
+            mCropViewRect.set(getPaddingStart(), getPaddingTop() + halfDiff,
+                    getPaddingStart() + mThisWidth, getPaddingTop() + height + halfDiff);
         }
 
         if (mCallback != null) {
@@ -356,7 +356,7 @@ public class OverlayView extends View {
         if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_MOVE) {
             if (event.getPointerCount() == 1 && mCurrentTouchCornerIndex != -1) {
 
-                x = Math.min(Math.max(x, getPaddingLeft()), getWidth() - getPaddingRight());
+                x = Math.min(Math.max(x, getPaddingStart()), getWidth() - getPaddingEnd());
                 y = Math.min(Math.max(y, getPaddingTop()), getHeight() - getPaddingBottom());
 
                 updateCropViewRect(x, y);

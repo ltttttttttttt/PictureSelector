@@ -37,7 +37,7 @@
         android:id="@+id/ib_delete"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:background="@color/picture_color_transparent"
         android:scaleType="centerInside"
         android:src="@drawable/picture_icon_delete" />

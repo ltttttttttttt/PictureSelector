@@ -1,7 +1,9 @@
 package com.luck.pictureselector;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
@@ -255,6 +257,16 @@ public class GlideEngine implements ResourcesConfig {
     @Override
     public Dialog showLoadingDialog(Context context) {
         return null;
+    }
+
+    @Nullable
+    @Override
+    public Resources hookResources(@NonNull Resources resources) {
+        return null;
+    }
+
+    @Override
+    public void inFrontOfActivitySuperOnCreate(@NonNull Activity activity) {
     }
 
 

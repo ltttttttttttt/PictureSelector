@@ -38,9 +38,9 @@
             android:id="@+id/tv_right"
             android:layout_width="48dp"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
             android:gravity="center"
             android:text=""
             android:textColor="@color/app_color_white"
@@ -79,7 +79,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="3dp"
+                android:layout_marginStart="3dp"
                 android:orientation="vertical">
 
                 <include layout="@layout/layout_number" />
@@ -180,7 +180,7 @@
                     android:id="@+id/tv_original_tips"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
                     android:text="* 开启原图功能，用户就可以自由选择原图；可能会导致压缩、裁剪功能失效。"
                     android:textColor="@android:color/holo_red_dark"
                     android:textSize="10dp"
@@ -419,7 +419,7 @@
                         android:id="@+id/rb_crop_1to1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginStart="5dp"
                         android:text="1:1"
                         android:textColor="@color/app_color_53575e"
                         android:textSize="14sp" />
@@ -428,7 +428,7 @@
                         android:id="@+id/rb_crop_3to4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginStart="5dp"
                         android:text="3:4"
                         android:textColor="@color/app_color_53575e"
                         android:textSize="14sp" />
@@ -437,7 +437,7 @@
                         android:id="@+id/rb_crop_3to2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginStart="5dp"
                         android:text="3:2"
                         android:textColor="@color/app_color_53575e"
                         android:textSize="14sp" />
@@ -446,7 +446,7 @@
                         android:id="@+id/rb_crop_16to9"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginStart="5dp"
                         android:text="16:9"
                         android:textColor="@color/app_color_53575e"
                         android:textSize="14sp" />
@@ -519,8 +519,8 @@
             android:id="@+id/recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:overScrollMode="never" />
     </RelativeLayout>
 </RelativeLayout>

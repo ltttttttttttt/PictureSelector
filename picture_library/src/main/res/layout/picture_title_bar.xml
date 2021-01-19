@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/picture_title"
         android:layout_alignBottom="@id/picture_title"
-        android:layout_toRightOf="@id/picture_title"
+        android:layout_toEndOf="@id/picture_title"
         android:scaleType="centerInside"
         android:src="?attr/picture.arrow_down.icon" />
 
@@ -35,7 +35,7 @@
         android:id="@+id/picture_right"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:gravity="center"
         android:padding="10dp"
         android:text="@string/picture_cancel"

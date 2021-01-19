@@ -117,8 +117,8 @@ public class CropImageView extends TransformImageView {
      */
     public void setCropRect(RectF cropRect) {
         mTargetAspectRatio = cropRect.width() / cropRect.height();
-        mCropRect.set(cropRect.left - getPaddingLeft(), cropRect.top - getPaddingTop(),
-                cropRect.right - getPaddingRight(), cropRect.bottom - getPaddingBottom());
+        mCropRect.set(cropRect.left - getPaddingStart(), cropRect.top - getPaddingTop(),
+                cropRect.right - getPaddingEnd(), cropRect.bottom - getPaddingBottom());
         calculateImageScaleBounds();
         setImageToWrapCropBounds();
     }

@@ -34,9 +34,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/titleViewBg"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginTop="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         android:background="?attr/picture.checked.style"
         android:gravity="center"
         android:textColor="@color/picture_color_white"
@@ -46,6 +46,6 @@
         android:id="@+id/btnCheck"
         android:layout_width="45dp"
         android:layout_height="48dp"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:background="@color/picture_color_transparent" />
 </merge>

@@ -24,7 +24,6 @@ import android.widget.Toast;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -32,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.luck.picture.lib.PicturePlayAudioDialog;
 import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.base.BaseActivity;
 import com.luck.picture.lib.broadcast.BroadcastAction;
 import com.luck.picture.lib.broadcast.BroadcastManager;
 import com.luck.picture.lib.config.PictureConfig;
@@ -65,7 +65,7 @@ import java.util.List;
  * @描述: Demo
  */
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener,
+public class MainActivity extends BaseActivity implements View.OnClickListener,
         RadioGroup.OnCheckedChangeListener, CompoundButton.OnCheckedChangeListener {
     private final static String TAG = MainActivity.class.getSimpleName();
     private RecyclerView mRecyclerView;

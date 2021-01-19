@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import androidx.appcompat.app.AppCompatActivity;
+import com.luck.picture.lib.base.BaseActivity;
 
-public class SimpleActivity extends AppCompatActivity implements View.OnClickListener {
+public class SimpleActivity extends BaseActivity implements View.OnClickListener {
     private Button btn_activity, btn_fragment;
 
     @Override

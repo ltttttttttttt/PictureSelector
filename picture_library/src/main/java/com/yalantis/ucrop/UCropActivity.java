@@ -35,11 +35,11 @@ import androidx.annotation.IdRes;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import com.luck.picture.lib.R;
+import com.luck.picture.lib.base.BaseActivity;
 import com.yalantis.ucrop.callback.BitmapCropCallback;
 import com.yalantis.ucrop.immersion.CropImmersiveManage;
 import com.yalantis.ucrop.model.AspectRatio;
@@ -65,7 +65,7 @@ import java.util.Locale;
  */
 
 @SuppressWarnings("ConstantConditions")
-public class UCropActivity extends AppCompatActivity {
+public class UCropActivity extends BaseActivity {
     /**
      * 是否使用沉浸式，子类复写该方法来确定是否采用沉浸式
      *

@@ -50,7 +50,7 @@
         android:id="@+id/tv_gif"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@id/iv_photo"
+        android:layout_alignEnd="@id/iv_photo"
         android:layout_alignBottom="@id/iv_photo"
         android:background="@drawable/ucrop_gif_bg"
         android:text="@string/ucrop_gif_tag"

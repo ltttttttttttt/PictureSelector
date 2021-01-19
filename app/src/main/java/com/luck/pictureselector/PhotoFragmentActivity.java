@@ -5,13 +5,13 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
+import com.luck.picture.lib.base.BaseActivity;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.tools.PictureFileUtils;
 
-public class PhotoFragmentActivity extends AppCompatActivity {
+public class PhotoFragmentActivity extends BaseActivity {
     private PhotoFragment fragment;
 
     @Override

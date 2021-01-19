@@ -3,12 +3,13 @@ apply from: "config.gradle"
 
 buildscript {
     repositories {
+        google()
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         jcenter()
         maven {
             url 'https://maven.google.com/'
             name 'Google'
         }
-        google()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.6.0'
@@ -23,6 +24,8 @@ allprojects {
     version = VERSION_NAME
     group = GROUP
     repositories {
+        google()
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         jcenter()
         maven {
             url 'https://maven.google.com/'

@@ -88,7 +88,7 @@ public class FullyGridLayoutManager extends GridLayoutManager {
                 if (view != null) {
                     RecyclerView.LayoutParams p = (RecyclerView.LayoutParams) view.getLayoutParams();
                     int childWidthSpec = ViewGroup.getChildMeasureSpec(widthSpec,
-                            getPaddingLeft() + getPaddingRight(), p.width);
+                            getPaddingStart() + getPaddingEnd(), p.width);
                     int childHeightSpec = ViewGroup.getChildMeasureSpec(heightSpec,
                             getPaddingTop() + getPaddingBottom(), p.height);
                     view.measure(childWidthSpec, childHeightSpec);

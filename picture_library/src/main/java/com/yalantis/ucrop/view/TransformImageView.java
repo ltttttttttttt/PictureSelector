@@ -265,9 +265,9 @@ public class TransformImageView extends AppCompatImageView {
         super.onLayout(changed, left, top, right, bottom);
         if (changed || (mBitmapDecoded && !mBitmapLaidOut)) {
 
-            left = getPaddingLeft();
+            left = getPaddingStart();
             top = getPaddingTop();
-            right = getWidth() - getPaddingRight();
+            right = getWidth() - getPaddingEnd();
             bottom = getHeight() - getPaddingBottom();
             mThisWidth = right - left;
             mThisHeight = bottom - top;
