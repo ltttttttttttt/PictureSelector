@@ -140,10 +140,7 @@ public abstract class PictureBaseActivity extends BaseActivity implements Handle
             config = savedInstanceState.getParcelable(PictureConfig.EXTRA_CONFIG);
         }
         isCheckConfigNull();
-        // 单独拍照不设置主题因为拍照界面已经设置了透明主题了
-        if (!config.camera) {
-            setTheme(config.themeStyleId);
-        }
+        setTheme(config.themeStyleId);
         super.onCreate(savedInstanceState);
         if (isRequestedOrientation()) {
             setNewRequestedOrientation();
